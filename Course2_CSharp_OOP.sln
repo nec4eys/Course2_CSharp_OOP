@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Range", "Range", "{9D6E229E-DE67-42B8-B441-CF63D22153C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RangeTask", "RangeTask\RangeTask.csproj", "{D2D4F637-C5CD-4ED6-A261-4FDB71BE40E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2D4F637-C5CD-4ED6-A261-4FDB71BE40E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2D4F637-C5CD-4ED6-A261-4FDB71BE40E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2D4F637-C5CD-4ED6-A261-4FDB71BE40E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2D4F637-C5CD-4ED6-A261-4FDB71BE40E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D2D4F637-C5CD-4ED6-A261-4FDB71BE40E7} = {9D6E229E-DE67-42B8-B441-CF63D22153C6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12526A5C-36EB-474B-B913-6B9C32EC46C6}
+	EndGlobalSection
+EndGlobal
