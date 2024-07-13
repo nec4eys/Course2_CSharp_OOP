@@ -8,5 +8,6 @@ namespace RangeTask
 {
     internal class Range
     {
+        public double From { get; set; }
     }
 }
