@@ -27,7 +27,7 @@ namespace RangeTask
             return number - From >= 0 && To - number >= 0;
         }
 
-        public Range GetIntersection(Range anotherRange) // поменять название функции
+        public Range GetRangesIntersection(Range anotherRange)
         {
             double intersectionFrom = Math.Max(From, anotherRange.From);
             double intersectionTo = Math.Min(To, anotherRange.To);
@@ -40,13 +40,13 @@ namespace RangeTask
             return new Range(intersectionFrom, intersectionTo);
         }
 
-        public Range[] GetUnification(Range anotherRange) // поменять название функции
+        public Range[] GetRangesUnion(Range anotherRange)
         {
-            Range intersectionRange = GetIntersection(anotherRange);
+            Range intersectionRange = GetRangesIntersection(anotherRange);
 
             if (intersectionRange == null)
             {
-                if (From != anotherRange.From && To != anotherRange.To)
+                if (From != anotherRange.To && To != anotherRange.From)
                 {
                     return [this, anotherRange];
                 }
@@ -55,26 +55,36 @@ namespace RangeTask
             return [new Range(Math.Min(From, anotherRange.From), Math.Max(To, anotherRange.To))];
         }
 
-        public Range[] GetDifference(Range anotherRange) // поменять название функции
+        public Range[] GetRangesDifference(Range anotherRange)
         {
-            Range intersectionRange = GetIntersection(anotherRange);
+            Range intersectionRange = GetRangesIntersection(anotherRange);
 
             if (intersectionRange == null)
             {
                 return [this, anotherRange];
             }
 
-            if ((From == anotherRange.From && To == anotherRange.To) || intersectionRange.Equals(this))
+            if ((From == anotherRange.From && To == anotherRange.To) || (intersectionRange.From == From && intersectionRange.To == To))
             {
                 return [];
             }
 
-            if (intersectionRange.Equals(anotherRange))
+            if (intersectionRange.From == anotherRange.From && intersectionRange.To == anotherRange.To)
             {
+                if (From == anotherRange.From)
+                {
+                    return [new Range(intersectionRange.To, To)];
+                }
+
+                if (To == anotherRange.To)
+                {
+                    return [new Range(From, intersectionRange.From)];
+                }
+
                 return [new Range(From, intersectionRange.From), new Range(intersectionRange.To, To)];
             }
 
-            if (IsInside(intersectionRange.To))
+            if (IsInside(intersectionRange.To) && intersectionRange.To != To)
             {
                 return [new Range(intersectionRange.To, To)];
             }
