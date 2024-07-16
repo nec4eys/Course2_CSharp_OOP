@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RangeTask
+﻿namespace RangeTask
 {
     internal class Range
     {
-        private double From { get; set; }
-        private double To { get; set; }
+        public double From { get; set; }
+
+        public double To { get; set; }
 
         public Range(double from, double to)
         {
@@ -24,15 +19,15 @@ namespace RangeTask
 
         public bool IsInside(double number)
         {
-            return number - From >= 0 && To - number >= 0;
+            return number >= From && number <= To;
         }
 
-        public Range GetRangesIntersection(Range anotherRange)
+        public Range? GetIntersection(Range range)
         {
-            double intersectionFrom = Math.Max(From, anotherRange.From);
-            double intersectionTo = Math.Min(To, anotherRange.To);
+            double intersectionFrom = Math.Max(From, range.From);
+            double intersectionTo = Math.Min(To, range.To);
 
-            if (intersectionTo - intersectionFrom <= 0)
+            if (intersectionTo <= intersectionFrom)
             {
                 return null;
             }
@@ -40,56 +35,44 @@ namespace RangeTask
             return new Range(intersectionFrom, intersectionTo);
         }
 
-        public Range[] GetRangesUnion(Range anotherRange)
+        public Range[] GetUnion(Range range)
         {
-            Range intersectionRange = GetRangesIntersection(anotherRange);
+            double intersectionFrom = Math.Max(From, range.From);
+            double intersectionTo = Math.Min(To, range.To);
 
-            if (intersectionRange == null)
+            if (intersectionTo < intersectionFrom)
             {
-                if (From != anotherRange.To && To != anotherRange.From)
-                {
-                    return [this, anotherRange];
-                }
+                return [new Range(From, To), new Range(range.From, range.To)];
             }
 
-            return [new Range(Math.Min(From, anotherRange.From), Math.Max(To, anotherRange.To))];
+            return [new Range(Math.Min(From, range.From), Math.Max(To, range.To))];
         }
 
-        public Range[] GetRangesDifference(Range anotherRange)
+        public Range[] GetDifference(Range range)
         {
-            Range intersectionRange = GetRangesIntersection(anotherRange);
-
-            if (intersectionRange == null)
+            if (From >= range.From)
             {
-                return [this, anotherRange];
-            }
-
-            if ((From == anotherRange.From && To == anotherRange.To) || (intersectionRange.From == From && intersectionRange.To == To))
-            {
-                return [];
-            }
-
-            if (intersectionRange.From == anotherRange.From && intersectionRange.To == anotherRange.To)
-            {
-                if (From == anotherRange.From)
+                if (To <= range.To)
                 {
-                    return [new Range(intersectionRange.To, To)];
+                    return [];
                 }
 
-                if (To == anotherRange.To)
-                {
-                    return [new Range(From, intersectionRange.From)];
-                }
-
-                return [new Range(From, intersectionRange.From), new Range(intersectionRange.To, To)];
+                return [new Range(Math.Max(From, range.To), To)];
             }
 
-            if (IsInside(intersectionRange.To) && intersectionRange.To != To)
+            List<Range> difference = [new Range(From, Math.Min(To, range.From))];
+
+            if (range.To < To)
             {
-                return [new Range(intersectionRange.To, To)];
+                difference.Add(new Range(range.To, To));
             }
 
-            return [new Range(From, intersectionRange.From)];
+            return difference.ToArray();
+        }
+
+        public override string ToString()
+        {
+            return From.ToString() + " - " + To.ToString();
         }
     }
 }
