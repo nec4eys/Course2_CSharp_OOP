@@ -1,13 +1,12 @@
-﻿namespace ShapesTask
+﻿namespace ShapesTask;
+
+public interface IShape
 {
-    internal interface IShape
-    {
-        double GetWidth();
+    double GetWidth();
 
-        double GetHeight();
+    double GetHeight();
 
-        double GetArea();
+    double GetArea();
 
-        double GetPermanent();
-    }
+    double GetPerimeter();
 }

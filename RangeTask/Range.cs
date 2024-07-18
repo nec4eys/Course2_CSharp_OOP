@@ -70,6 +70,6 @@ public class Range
 
     public override string ToString()
     {
-        return "(" + From + " ; " + To + ")";
+        return "(" + From + "; " + To + ")";
     }
 }
