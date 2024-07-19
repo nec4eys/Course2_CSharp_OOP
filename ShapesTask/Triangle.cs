@@ -2,8 +2,6 @@
 
 public class Triangle : IShape
 {
-    // Можно ли было сделать структуру Point (спросить в письме)
-
     public double X1 { get; set; }
 
     public double Y1 { get; set; }
