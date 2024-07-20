@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace VectorTask;
+﻿namespace VectorTask;
 
 public class Vector
 {

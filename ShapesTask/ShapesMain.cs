@@ -1,16 +1,29 @@
-﻿namespace ShapesTask;
+﻿using ShapesTask.Comparers;
+using ShapesTask.Shapes;
+
+namespace ShapesTask;
 
 internal class ShapesMain
 {
-    public static IShape GetShapeMaxArea(IShape[] shapes)
+    public static IShape? GetShapeWithMaxArea(IShape[] shapes)
     {
+        if (shapes.Length == 0)
+        {
+            return null;
+        }
+
         Array.Sort(shapes, new ShapeAreaComparer());
 
         return shapes[0];
     }
 
-    public static IShape GetShapeSecondMaxPerimeter(IShape[] shapes)
+    public static IShape? GetShapeWithSecondMaxPerimeter(IShape[] shapes)
     {
+        if (shapes.Length < 2)
+        {
+            return null;
+        }
+
         Array.Sort(shapes, new ShapePerimeterComparer());
 
         return shapes[1];
@@ -27,7 +40,14 @@ internal class ShapesMain
             new Circle(7.1)
         };
 
-        Console.WriteLine($"Фигура с максимальной площадью: {GetShapeMaxArea(shapes)}");
-        Console.WriteLine($"Фигура со вторым по величине периметром: {GetShapeSecondMaxPerimeter(shapes)}");
+        Console.WriteLine("Фигуры:");
+
+        for (int i = 0; i < shapes.Length; i++)
+        {
+            Console.WriteLine(shapes[i]);
+        }
+
+        Console.WriteLine($"Фигура с максимальной площадью: {GetShapeWithMaxArea(shapes)}");
+        Console.WriteLine($"Фигура со вторым по величине периметром: {GetShapeWithSecondMaxPerimeter(shapes)}");
     }
 }

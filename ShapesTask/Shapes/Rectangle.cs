@@ -1,4 +1,4 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public class Rectangle : IShape
 {
@@ -17,14 +17,14 @@ public class Rectangle : IShape
         return Width * Height;
     }
 
-    public double GetHeight()
-    {
-        return Height;
-    }
-
     public double GetPerimeter()
     {
         return (Width + Height) * 2;
+    }
+
+    public double GetHeight()
+    {
+        return Height;
     }
 
     public double GetWidth()
@@ -34,7 +34,7 @@ public class Rectangle : IShape
 
     public override string ToString()
     {
-        return "Прямоугольник с шириной: " + Width + " и высотой: " + Height;
+        return "Прямоугольник с шириной: " + Width + " и высотой: " + Height + "; Площадь: " + GetArea() + "; Периметр: " + GetPerimeter();
     }
 
     public override int GetHashCode()
@@ -60,10 +60,8 @@ public class Rectangle : IShape
             return false;
         }
 
-        Rectangle rectangle = (Rectangle) obj;
+        Rectangle rectangle = (Rectangle)obj;
 
-        double epsilon = 1.0e-10;
-
-        return Math.Abs(Width - rectangle.GetWidth()) <= epsilon && Math.Abs(Height - rectangle.GetHeight()) <= epsilon;
+        return Width == rectangle.GetWidth() && Height == rectangle.GetHeight();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public class Circle : IShape
 {
@@ -11,17 +11,17 @@ public class Circle : IShape
 
     public double GetArea()
     {
-        return Math.PI * Math.Pow(Radius, 2);
-    }
-
-    public double GetHeight()
-    {
-        return Radius * 2;
+        return Math.PI * Radius * Radius;
     }
 
     public double GetPerimeter()
     {
         return 2 * Math.PI * Radius;
+    }
+
+    public double GetHeight()
+    {
+        return Radius * 2;
     }
 
     public double GetWidth()
@@ -31,7 +31,7 @@ public class Circle : IShape
 
     public override string ToString()
     {
-        return "Круг с радиусом: " + Radius;
+        return "Круг с радиусом: " + Radius + "; Площадь: " + GetArea() + "; Периметр: " + GetPerimeter();
     }
 
     public override int GetHashCode()
@@ -56,10 +56,8 @@ public class Circle : IShape
             return false;
         }
 
-        Circle circle = (Circle) obj;
+        Circle circle = (Circle)obj;
 
-        double epsilon = 1.0e-10;
-
-        return Math.Abs(GetWidth() - circle.GetWidth()) <= epsilon;
+        return GetWidth() == circle.GetWidth();
     }
 }

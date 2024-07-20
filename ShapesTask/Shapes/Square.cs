@@ -1,4 +1,4 @@
-﻿namespace ShapesTask;
+﻿namespace ShapesTask.Shapes;
 
 public class Square : IShape
 {
@@ -11,17 +11,17 @@ public class Square : IShape
 
     public double GetArea()
     {
-        return Math.Pow(SideLength, 2);
-    }
-
-    public double GetHeight()
-    {
-        return SideLength;
+        return SideLength * SideLength;
     }
 
     public double GetPerimeter()
     {
         return SideLength * 4;
+    }
+
+    public double GetHeight()
+    {
+        return SideLength;
     }
 
     public double GetWidth()
@@ -31,7 +31,7 @@ public class Square : IShape
 
     public override string ToString()
     {
-        return "Квадрат с длиной стороны: " + SideLength;
+        return "Квадрат с длиной стороны: " + SideLength + "; Площадь: " + GetArea() + "; Периметр: " + GetPerimeter();
     }
 
     public override int GetHashCode()
@@ -56,10 +56,8 @@ public class Square : IShape
             return false;
         }
 
-        Square square = (Square) obj;
+        Square square = (Square)obj;
 
-        double epsilon = 1.0e-10;
-
-        return Math.Abs(SideLength - square.GetWidth()) <= epsilon;
+        return SideLength == square.GetWidth();
     }
 }
