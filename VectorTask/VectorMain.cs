@@ -4,7 +4,7 @@ internal class VectorMain
 {
     static void Main(string[] args)
     {
-        Vector vector1 = new Vector(5);
+        /*Vector vector1 = new Vector(5);
         Vector vector2 = new Vector(vector1);
         Vector vector3 = new Vector([1, 2, 3]);
         Vector vector4 = new Vector(5, [4, 5, 6]);
@@ -44,6 +44,17 @@ internal class VectorMain
 
         Vector vector7 = new Vector(vector1);
         Vector vector8 = new Vector(vector7);
-        Console.WriteLine($"Проверка на равенство веркторов: {vector7.Equals(vector8)}");
+        Console.WriteLine($"Проверка на равенство веркторов: {vector7.Equals(vector8)}");*/
+
+        Vector vector1 = new Vector([4, 3, 2, 1]);
+        Vector vector2 = new Vector(vector1);
+
+        Console.WriteLine($"vector1 = {vector1}");
+        Console.WriteLine($"vector2 = {vector2}");
+
+        vector1.SetComponentByIndex(0, 10);
+
+        Console.WriteLine($"vector1 = {vector1}");
+        Console.WriteLine($"vector2 = {vector2}");
     }
 }

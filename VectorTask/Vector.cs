@@ -28,7 +28,8 @@ public class Vector
             throw new ArgumentException("n <= 0");
         }
 
-        Components = components;
+        Components = new double[components.Length];
+        Array.Copy(components, Components, components.Length);
     }
 
     public Vector(int n, double[] components) : this(n)
