@@ -66,7 +66,7 @@ public class Vector
         Components = components;
     }
 
-    public void SubtractionVector(Vector vector)
+    public void SubtractVector(Vector vector)
     {
         int vectorSize = vector.GetSize();
 

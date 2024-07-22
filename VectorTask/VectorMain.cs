@@ -27,7 +27,7 @@ internal class VectorMain
         vector1.AddVector(vector4);
         Console.WriteLine($"Прибавление вектора: {vector1}");
 
-        vector4.SubtractionVector(vector5);
+        vector4.SubtractVector(vector5);
         Console.WriteLine($"Вычетание вектора: {vector4}");
 
         double scalar = 5.0;
