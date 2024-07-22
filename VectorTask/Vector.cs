@@ -92,7 +92,7 @@ public class Vector
         Components = components;
     }
 
-    public void MultiplicationVectorByScalar(double scalar)
+    public void MultiplyVectorByScalar(double scalar)
     {
         for (int i = 0; i < Components.Length; i++)
         {
@@ -102,7 +102,7 @@ public class Vector
 
     public void RotateVector()
     {
-        MultiplicationVectorByScalar(-1);
+        MultiplyVectorByScalar(-1);
     }
 
     public double GetVectorLength()

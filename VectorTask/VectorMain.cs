@@ -31,7 +31,7 @@ internal class VectorMain
         Console.WriteLine($"Вычетание вектора: {vector4}");
 
         double scalar = 5.0;
-        vector5.MultiplicationVectorByScalar(scalar);
+        vector5.MultiplyVectorByScalar(scalar);
         Console.WriteLine($"Умножение вектора на скаляр: {vector5}");
 
         vector4.RotateVector();
