@@ -24,7 +24,7 @@ public class Triangle : IShape
         Y3 = y3;
     }
 
-    private double GetSideLength(double x1, double y1, double x2, double y2)
+    private static double GetSideLength(double x1, double y1, double x2, double y2)
     {
         return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
     }
@@ -66,7 +66,7 @@ public class Triangle : IShape
 
     public override int GetHashCode()
     {
-        int prime = 15;
+        int prime = 17;
         int hash = 1;
 
         hash = prime * hash + X1.GetHashCode();

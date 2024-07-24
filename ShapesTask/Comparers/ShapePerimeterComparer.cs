@@ -8,17 +8,17 @@ public class ShapePerimeterComparer : IComparer<IShape>
     {
         if (shape1 == null)
         {
-            return 1;
+            return shape2 == null ? 0 : 1;
         }
 
         if (shape2 == null)
         {
-            return -1;
+            return shape1 == null ? 0 : -1;
         }
 
         double shape1Perimeter = shape1.GetPerimeter();
         double shape2Perimeter = shape2.GetPerimeter();
 
-        return shape2Perimeter.CompareTo(shape1Perimeter);
+        return shape1Perimeter.CompareTo(shape2Perimeter);
     }
 }

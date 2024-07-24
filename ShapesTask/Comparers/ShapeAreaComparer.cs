@@ -8,17 +8,17 @@ public class ShapeAreaComparer : IComparer<IShape>
     {
         if (shape1 == null)
         {
-            return 1;
+            return shape2 == null ? 0 : 1;
         }
 
         if (shape2 == null)
         {
-            return -1;
+            return shape1 == null ? 0 : -1;
         }
 
         double shape1Area = shape1.GetArea();
         double shape2Area = shape2.GetArea();
 
-        return shape2Area.CompareTo(shape1Area);
+        return shape1Area.CompareTo(shape2Area);
     }
 }

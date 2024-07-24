@@ -36,7 +36,7 @@ public class Square : IShape
 
     public override int GetHashCode()
     {
-        int prime = 15;
+        int prime = 17;
         int hash = 1;
 
         hash = prime * hash + SideLength.GetHashCode();
@@ -58,6 +58,6 @@ public class Square : IShape
 
         Square square = (Square)obj;
 
-        return SideLength == square.GetWidth();
+        return SideLength == square.SideLength;
     }
 }

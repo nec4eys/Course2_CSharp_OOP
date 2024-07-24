@@ -39,7 +39,7 @@ public class Rectangle : IShape
 
     public override int GetHashCode()
     {
-        int prime = 15;
+        int prime = 17;
         int hash = 1;
 
         hash = prime * hash + Width.GetHashCode();
@@ -62,6 +62,6 @@ public class Rectangle : IShape
 
         Rectangle rectangle = (Rectangle)obj;
 
-        return Width == rectangle.GetWidth() && Height == rectangle.GetHeight();
+        return Width == rectangle.Width && Height == rectangle.Height;
     }
 }

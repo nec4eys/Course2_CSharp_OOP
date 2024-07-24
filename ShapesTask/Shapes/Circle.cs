@@ -36,7 +36,7 @@ public class Circle : IShape
 
     public override int GetHashCode()
     {
-        int prime = 15;
+        int prime = 17;
         int hash = 1;
 
         hash = prime * hash + Radius.GetHashCode();
@@ -58,6 +58,6 @@ public class Circle : IShape
 
         Circle circle = (Circle)obj;
 
-        return GetWidth() == circle.GetWidth();
+        return Radius == circle.Radius;
     }
 }

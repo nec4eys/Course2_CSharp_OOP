@@ -14,7 +14,7 @@ internal class ShapesMain
 
         Array.Sort(shapes, new ShapeAreaComparer());
 
-        return shapes[0];
+        return shapes[^1];
     }
 
     public static IShape? GetShapeWithSecondMaxPerimeter(IShape[] shapes)
@@ -26,7 +26,7 @@ internal class ShapesMain
 
         Array.Sort(shapes, new ShapePerimeterComparer());
 
-        return shapes[1];
+        return shapes[^2];
     }
 
     static void Main(string[] args)
@@ -42,9 +42,9 @@ internal class ShapesMain
 
         Console.WriteLine("Фигуры:");
 
-        for (int i = 0; i < shapes.Length; i++)
+        foreach (var shape in shapes)
         {
-            Console.WriteLine(shapes[i]);
+            Console.WriteLine(shape);
         }
 
         Console.WriteLine($"Фигура с максимальной площадью: {GetShapeWithMaxArea(shapes)}");
