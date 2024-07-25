@@ -18,32 +18,32 @@ internal class VectorMain
         Console.WriteLine($"vector5 = {vector5}");
         Console.WriteLine($"vector6 = {vector6}");
 
-        // статичные методы
-        Console.WriteLine($"Сложение двух векторов: {Vector.GetSummedVectors(vector3, vector5)}");
-        Console.WriteLine($"Вичитание векторов: {Vector.GetSubtractionVectors(vector4, vector6)}");
-        Console.WriteLine($"Скалярное произведение векторов: {Vector.GetVectorsScalarProduct(vector3, vector4)}");
+        // статические методы
+        Console.WriteLine($"Сложение двух векторов: {Vector.GetAmount(vector3, vector5)}");
+        Console.WriteLine($"Вычетание векторов: {Vector.GetDifference(vector4, vector6)}");
+        Console.WriteLine($"Скалярное произведение векторов: {Vector.GetScalarProduct(vector3, vector4)}");
 
-        // нестатичные методы
-        vector1.AddVector(vector4);
+        // нестатические методы
+        vector1.Add(vector4);
         Console.WriteLine($"Прибавление вектора: {vector1}");
 
-        vector4.SubtractVector(vector5);
+        vector4.Subtract(vector5);
         Console.WriteLine($"Вычетание вектора: {vector4}");
 
         double scalar = 5.0;
-        vector5.MultiplyVectorByScalar(scalar);
+        vector5.MultiplyByScalar(scalar);
         Console.WriteLine($"Умножение вектора на скаляр: {vector5}");
 
-        vector4.RotateVector();
+        vector4.Unwrap();
         Console.WriteLine($"Разворот вектора: {vector4}");
 
-        Console.WriteLine($"Получение длины вектора: {vector4.GetVectorLength()}");
+        Console.WriteLine($"Получение длины вектора: {vector4.GetLength()}");
 
         vector6.SetComponentByIndex(0, 1.0);
         Console.WriteLine($"Установка и получение компонента вектора по индексу: {vector6.GetComponentByIndex(0)}");
 
         Vector vector7 = new Vector(vector1);
         Vector vector8 = new Vector(vector7);
-        Console.WriteLine($"Проверка на равенство веркторов: {vector7.Equals(vector8)}");
+        Console.WriteLine($"Проверка на равенство векторов: {vector7.Equals(vector8)}");
     }
 }
