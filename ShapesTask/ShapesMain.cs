@@ -42,7 +42,7 @@ internal class ShapesMain
 
         Console.WriteLine("Фигуры:");
 
-        foreach (var shape in shapes)
+        foreach (IShape shape in shapes)
         {
             Console.WriteLine(shape);
         }
