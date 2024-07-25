@@ -13,7 +13,7 @@ public class ShapePerimeterComparer : IComparer<IShape>
 
         if (shape2 == null)
         {
-            return -1;
+            return 1;
         }
 
         double shape1Perimeter = shape1.GetPerimeter();

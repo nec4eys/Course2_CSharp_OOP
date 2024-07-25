@@ -13,7 +13,7 @@ public class ShapeAreaComparer : IComparer<IShape>
 
         if (shape2 == null)
         {
-            return -1;
+            return 1;
         }
 
         double shape1Area = shape1.GetArea();
