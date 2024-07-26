@@ -153,7 +153,12 @@ public class Vector
             stringBuilder.Insert(stringBuilder.Length - 1, $"{component},");
         }
 
-        return stringBuilder.Remove(stringBuilder.Length - 2, 1).ToString();
+        if (_components.Length != 0)
+        {
+            stringBuilder.Remove(stringBuilder.Length - 2, 1);
+        }
+
+        return stringBuilder.ToString();
     }
 
     public override int GetHashCode()
