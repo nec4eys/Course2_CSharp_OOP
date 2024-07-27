@@ -19,8 +19,8 @@ internal class VectorMain
         Console.WriteLine($"vector6 = {vector6}");
 
         // статические методы
-        Console.WriteLine($"Сложение двух векторов: {Vector.GetAmount(vector3, vector5)}");
-        Console.WriteLine($"Вычетание векторов: {Vector.GetDifference(vector4, vector6)}");
+        Console.WriteLine($"Сложение двух векторов: {Vector.GetSum(vector3, vector5)}");
+        Console.WriteLine($"Вычитание векторов: {Vector.GetDifference(vector4, vector6)}");
         Console.WriteLine($"Скалярное произведение векторов: {Vector.GetScalarProduct(vector3, vector4)}");
 
         // нестатические методы
@@ -28,13 +28,13 @@ internal class VectorMain
         Console.WriteLine($"Прибавление вектора: {vector1}");
 
         vector4.Subtract(vector5);
-        Console.WriteLine($"Вычетание вектора: {vector4}");
+        Console.WriteLine($"Вычитание вектора: {vector4}");
 
         double scalar = 5.0;
         vector5.MultiplyByScalar(scalar);
         Console.WriteLine($"Умножение вектора на скаляр: {vector5}");
 
-        vector4.Unwrap();
+        vector4.Turn();
         Console.WriteLine($"Разворот вектора: {vector4}");
 
         Console.WriteLine($"Получение длины вектора: {vector4.GetLength()}");
