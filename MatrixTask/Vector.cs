@@ -12,7 +12,7 @@ public class Vector
     {
         if (size <= 0)
         {
-            throw new ArgumentException($"Size of the vector must be > 0. Specified {nameof(size)}: {size}");
+            throw new ArgumentException($"Size of the vector must be > 0. Specified {nameof(size)}: {size}", nameof(size));
         }
 
         _components = new double[size];
@@ -24,7 +24,7 @@ public class Vector
     {
         if (components.Length == 0)
         {
-            throw new ArgumentException($"Size of the vector must be > 0. Specified {nameof(components.Length)}: {components.Length}");
+            throw new ArgumentException($"Size of the vector must be > 0. Specified {nameof(components.Length)}: {components.Length}", nameof(components.Length));
         }
 
         _components = new double[components.Length];
@@ -74,7 +74,7 @@ public class Vector
         }
     }
 
-    public void Turn()
+    public void Reverse()
     {
         MultiplyByScalar(-1);
     }
@@ -147,7 +147,7 @@ public class Vector
 
         foreach (double component in _components)
         {
-            stringBuilder.Append($"{component}, ");
+            stringBuilder.Append(component).Append(", ");
         }
 
         return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();

@@ -34,7 +34,7 @@ internal class VectorMain
         vector5.MultiplyByScalar(scalar);
         Console.WriteLine($"Умножение вектора на скаляр: {vector5}");
 
-        vector4.Turn();
+        vector4.Reverse();
         Console.WriteLine($"Разворот вектора: {vector4}");
 
         Console.WriteLine($"Получение длины вектора: {vector4.GetLength()}");
