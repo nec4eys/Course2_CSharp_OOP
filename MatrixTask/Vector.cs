@@ -6,19 +6,16 @@ public class Vector
 {
     private double[] _components;
 
-    public int Size
-    {
-        get { return _components.Length; }
-    }
+    public int Size => _components.Length;
 
-    public Vector(int componentsCount)
+    public Vector(int size)
     {
-        if (componentsCount <= 0)
+        if (size <= 0)
         {
-            throw new ArgumentException($"Count of components of the vector must be > 0. Now {componentsCount}", nameof(componentsCount));
+            throw new ArgumentException($"Size of the vector must be > 0. Specified {nameof(size)}: {size}");
         }
 
-        _components = new double[componentsCount];
+        _components = new double[size];
     }
 
     public Vector(Vector vector) : this(vector._components) { }
@@ -27,7 +24,7 @@ public class Vector
     {
         if (components.Length == 0)
         {
-            throw new ArgumentException($"Count of components of the vector must be > 0. Now {components.Length}", nameof(components.Length));
+            throw new ArgumentException($"Size of the vector must be > 0. Specified {nameof(components.Length)}: {components.Length}");
         }
 
         _components = new double[components.Length];
@@ -77,7 +74,7 @@ public class Vector
         }
     }
 
-    public void Unwrap()
+    public void Turn()
     {
         MultiplyByScalar(-1);
     }
@@ -98,7 +95,7 @@ public class Vector
     {
         if (index < 0 || index >= _components.Length)
         {
-            throw new IndexOutOfRangeException($"index is out of range [0, {_components.Length}]. Now {index}");
+            throw new IndexOutOfRangeException($"Index is out of range [0; {_components.Length - 1}]. Specified {nameof(index)}: {index}");
         }
 
         return _components[index];
@@ -108,13 +105,13 @@ public class Vector
     {
         if (index < 0 || index >= _components.Length)
         {
-            throw new IndexOutOfRangeException($"index is out of range [0, {_components.Length}]. Now {index}]");
+            throw new IndexOutOfRangeException($"Index is out of range [0; {_components.Length - 1}]. Specified {nameof(index)}: {index}");
         }
 
         _components[index] = component;
     }
 
-    public static Vector GetAmount(Vector vector1, Vector vector2)
+    public static Vector GetSum(Vector vector1, Vector vector2)
     {
         Vector resultVector = new Vector(vector1);
         resultVector.Add(vector2);
@@ -134,31 +131,26 @@ public class Vector
     {
         int minSize = Math.Min(vector1.Size, vector2.Size);
 
-        double scalar = 0.0;
+        double scalarProduct = 0.0;
 
         for (int i = 0; i < minSize; i++)
         {
-            scalar += vector1._components[i] * vector2._components[i];
+            scalarProduct += vector1._components[i] * vector2._components[i];
         }
 
-        return scalar;
+        return scalarProduct;
     }
 
     public override string ToString()
     {
-        StringBuilder stringBuilder = new StringBuilder("{}");
+        StringBuilder stringBuilder = new StringBuilder("{");
 
         foreach (double component in _components)
         {
-            stringBuilder.Insert(stringBuilder.Length - 1, $"{component},");
+            stringBuilder.Append($"{component}, ");
         }
 
-        if ( _components.Length != 0 )
-        {
-            stringBuilder.Remove(stringBuilder.Length - 2, 1);
-        }
-
-        return stringBuilder.ToString();
+        return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
     }
 
     public override int GetHashCode()

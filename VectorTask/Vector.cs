@@ -150,7 +150,7 @@ public class Vector
             stringBuilder.Append($"{component}, ");
         }
 
-        return stringBuilder.Remove(stringBuilder.Length - 1, 1).Append('}').ToString();
+        return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
     }
 
     public override int GetHashCode()

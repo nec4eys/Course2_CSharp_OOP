@@ -76,7 +76,7 @@ internal class MatrixMain
         Matrix matrix6 = new Matrix(vectors2);
         Matrix matrix7 = new Matrix(vectors3);
 
-        Console.WriteLine($"new matrix = matrix6 + matrix7: {Matrix.GetAmount(matrix6, matrix7)}");
+        Console.WriteLine($"new matrix = matrix6 + matrix7: {Matrix.GetSum(matrix6, matrix7)}");
         Console.WriteLine($"new matrix = matrix6 - matrix7: {Matrix.GetDifference(matrix6, matrix7)}");
         Console.WriteLine($"new matrix = matrix6 * matrix7: {Matrix.GetMultiplication(matrix6, matrix7)}");
     }
