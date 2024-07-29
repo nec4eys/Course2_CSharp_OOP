@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CsvTask": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\\\..\\\\..\\\\input.txt\r\n..\\\\..\\\\..\\\\output.txt"
+    }
+  }
+}

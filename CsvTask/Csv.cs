@@ -1,48 +1,84 @@
-﻿namespace CsvTask
+﻿using System.Text;
+
+namespace CsvTask;
+
+internal class Csv
 {
-    internal class Csv
+    public static string CreateMessageWithIndentation(string message, int indentationSize = 0)
     {
-        public static string CreateIndentation(int count)
+        StringBuilder indentation = new StringBuilder();
+
+        for (int i = 0; i < indentationSize; i++)
         {
-            string indentation = "";
-
-            for (int i = 0; i < count; i++)
-            {
-                indentation += "\t";
-            }
-
-            return indentation;
+            indentation.Append('\t');
         }
 
-        static void Main(string[] args)
-        {
-            using StreamReader reader = new StreamReader(args[0]);
-            using StreamWriter writer = new StreamWriter(args[1]);
+        return indentation.Append(message).ToString();
+    }
 
-            int indentationCount = 0;
+    static void Main(string[] args)
+    {
+        string standardInputPath = "..\\..\\..\\input.txt";
+        string standardOutputPath = "..\\..\\..\\output.txt";
+
+        if (args.Length == 0)
+        {
+            args = [standardInputPath, standardOutputPath];
+        }
+
+        try
+        {
+            if (string.IsNullOrEmpty(args[1]))
+            {
+                args[1] = standardOutputPath;
+            }
+        }
+        catch (IndexOutOfRangeException)
+        {
+            args = [args[0], standardOutputPath];
+        }
+
+        StreamReader reader = null;
+        StreamWriter writer = null;
+
+        try
+        {
+            reader = new StreamReader(args[0]);
+            writer = new StreamWriter(args[1]);
+
+            int indentationSize = 0;
 
             writer.WriteLine("<!DOCTYPE html>");
-            writer.WriteLine(CreateIndentation(indentationCount++) + "<html>");
+            writer.WriteLine(CreateMessageWithIndentation("<html>", indentationSize));
+            indentationSize++;
 
-            writer.WriteLine(CreateIndentation(indentationCount++) + "<head>");
-            writer.WriteLine(CreateIndentation(indentationCount) + "<title>" + "Таблица" + "</title>");
-            writer.WriteLine(CreateIndentation(indentationCount) + "<meta charset=\"utf-8\">");
-            writer.WriteLine(CreateIndentation(--indentationCount) + "</head>");
+            writer.WriteLine(CreateMessageWithIndentation("<head>", indentationSize));
+            indentationSize++;
 
-            writer.WriteLine(CreateIndentation(indentationCount++) + "<body>");
-            writer.WriteLine(CreateIndentation(indentationCount++) + "<table>");
+            writer.WriteLine(CreateMessageWithIndentation("<title>Таблица</title>", indentationSize));
+            writer.WriteLine(CreateMessageWithIndentation("<meta charset=\"utf-8\">", indentationSize));
+
+            --indentationSize;
+            writer.WriteLine(CreateMessageWithIndentation("</head>", indentationSize));
+
+            writer.WriteLine(CreateMessageWithIndentation("<body>", indentationSize));
+            indentationSize++;
+
+            writer.WriteLine(CreateMessageWithIndentation("<table border=\"1\">", indentationSize));
+            indentationSize++;
 
             string currentLine;
 
             bool isNewRow = true;
 
-            string lineCell = "";
+            StringBuilder cell = new StringBuilder();
 
             while ((currentLine = reader.ReadLine()) != null)
             {
                 if (isNewRow)
                 {
-                    writer.WriteLine(CreateIndentation(indentationCount++) + "<tr>");
+                    writer.WriteLine(CreateMessageWithIndentation("<tr>", indentationSize));
+                    indentationSize++;
                 }
 
                 for (int i = 0; i < currentLine.Length; i++)
@@ -56,18 +92,17 @@
                             isNewRow = !isNewRow;
                             continue;
                         }
-                        else
-                        {
-                            i++;
-                        }
+
+                        i++;
                     }
 
                     if (currentChar == ',')
                     {
                         if (isNewRow)
                         {
-                            writer.WriteLine(CreateIndentation(indentationCount) + "<td>" + lineCell + "</td>");
-                            lineCell = "";
+                            writer.WriteLine(CreateMessageWithIndentation(cell.Insert(0, "<td>").Append("</td>").ToString(), indentationSize));
+
+                            cell.Clear();
                             continue;
                         }
                     }
@@ -75,35 +110,59 @@
                     switch (currentChar)
                     {
                         case '<':
-                            lineCell += "&lt";
+                            cell.Append("&lt;");
                             break;
                         case '>':
-                            lineCell += "&gt";
+                            cell.Append("&gt;");
                             break;
                         case '&':
-                            lineCell += "&amp";
+                            cell.Append("&amp;");
                             break;
                         default:
-                            lineCell += currentChar;
+                            cell.Append(currentChar);
                             break;
                     }
                 }
 
                 if (!isNewRow)
                 {
-                    lineCell += "<br/>";
+                    cell.Append("<br/>");
                 }
                 else
                 {
-                    writer.WriteLine(CreateIndentation(indentationCount) + "<td>" + lineCell + "</td>");
-                    writer.WriteLine(CreateIndentation(--indentationCount) + "</tr>");
-                    lineCell = "";
+                    writer.WriteLine(CreateMessageWithIndentation(cell.Insert(0, "<td>").Append("</td>").ToString(), indentationSize));
+
+                    --indentationSize;
+                    writer.WriteLine(CreateMessageWithIndentation("</tr>", indentationSize));
+
+                    cell.Clear();
                 }
             }
 
-            writer.WriteLine(CreateIndentation(--indentationCount) + "</table>");
-            writer.WriteLine(CreateIndentation(--indentationCount) + "</body>");
-            writer.WriteLine(CreateIndentation(--indentationCount) + "</html>");
+            --indentationSize;
+            writer.WriteLine(CreateMessageWithIndentation("</table>", indentationSize));
+
+            --indentationSize;
+            writer.WriteLine(CreateMessageWithIndentation("</body>", indentationSize));
+
+            --indentationSize;
+            writer.WriteLine(CreateMessageWithIndentation("</html>", indentationSize));
+        }
+        catch (FileNotFoundException)
+        {
+            throw new ArgumentException("The specified path is invalid", nameof(args));
+        }
+        finally
+        {
+            if (reader is IDisposable)
+            {
+                reader.Dispose();
+            }
+
+            if (writer is IDisposable)
+            {
+                writer.Dispose();
+            }
         }
     }
 }
