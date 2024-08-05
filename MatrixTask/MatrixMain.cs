@@ -1,4 +1,6 @@
-﻿namespace MatrixTask;
+﻿using VectorTask;
+
+namespace MatrixTask;
 
 internal class MatrixMain
 {
@@ -6,6 +8,8 @@ internal class MatrixMain
     {
         Matrix matrix1 = new Matrix(3, 3);
         Matrix matrix2 = new Matrix(matrix1);
+
+        Console.WriteLine(matrix1.Equals(matrix2));
 
         Vector[] vectors =
         {
@@ -15,7 +19,7 @@ internal class MatrixMain
         };
         Matrix matrix3 = new Matrix(vectors);
 
-        double[,] values = new double[,]
+        double[,] values =
         {
             { 10, 11 },
             { 13, 14 },
@@ -23,8 +27,7 @@ internal class MatrixMain
         };
         Matrix matrix4 = new Matrix(values);
 
-        Vector[] vectors1 = { };
-        Matrix matrix5 = new Matrix(vectors1);
+        Matrix matrix5 = new Matrix(vectors);
 
         Console.WriteLine($"matrix1: {matrix1}");
         Console.WriteLine($"matrix2: {matrix2}");
@@ -78,6 +81,6 @@ internal class MatrixMain
 
         Console.WriteLine($"new matrix = matrix6 + matrix7: {Matrix.GetSum(matrix6, matrix7)}");
         Console.WriteLine($"new matrix = matrix6 - matrix7: {Matrix.GetDifference(matrix6, matrix7)}");
-        Console.WriteLine($"new matrix = matrix6 * matrix7: {Matrix.GetMultiplication(matrix6, matrix7)}");
+        Console.WriteLine($"new matrix = matrix6 * matrix7: {Matrix.GetProduct(matrix6, matrix7)}");
     }
 }
