@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection.PortableExecutable;
+using System.Text;
 
 namespace CsvTask;
 
@@ -16,153 +17,107 @@ internal class Csv
         return indentation.Append(message).ToString();
     }
 
+    public static void ConvertCsvToHtml(string inputPath, string outputPath)
+    {
+        using StreamReader reader = new StreamReader(inputPath);
+        using StreamWriter writer = new StreamWriter(outputPath);
+
+        writer.WriteLine("<!DOCTYPE html>");
+        writer.WriteLine(CreateMessageWithIndentation("<html>", 0));
+        writer.WriteLine(CreateMessageWithIndentation("<head>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("<title>Таблица</title>", 2));
+        writer.WriteLine(CreateMessageWithIndentation("<meta charset=\"utf-8\">", 2));
+        writer.WriteLine(CreateMessageWithIndentation("</head>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("<body>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("<table border=\"1\">", 2));
+
+        string? currentLine;
+
+        bool isNewRow = true;
+
+        while ((currentLine = reader.ReadLine()) != null)
+        {
+            if (isNewRow)
+            {
+                writer.WriteLine(CreateMessageWithIndentation("<tr>", 3));
+                writer.Write(CreateMessageWithIndentation("<td>", 4));
+            }
+
+            for (int i = 0; i < currentLine.Length; i++)
+            {
+                char currentChar = currentLine[i];
+
+                if (currentChar == '"')
+                {
+                    if (isNewRow || i + 1 >= currentLine.Length || currentLine[i + 1] != '"')
+                    {
+                        isNewRow = !isNewRow;
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                if (currentChar == ',')
+                {
+                    if (isNewRow)
+                    {
+                        writer.WriteLine("</td>");
+                        writer.Write(CreateMessageWithIndentation("<td>", 4));
+
+                        continue;
+                    }
+                }
+
+                switch (currentChar)
+                {
+                    case '<':
+                        writer.Write("&lt;");
+                        break;
+                    case '>':
+                        writer.Write("&gt;");
+                        break;
+                    case '&':
+                        writer.Write("&amp;");
+                        break;
+                    default:
+                        writer.Write(currentChar);
+                        break;
+                }
+            }
+
+            if (!isNewRow)
+            {
+                writer.Write("<br/>");
+            }
+            else
+            {
+                writer.WriteLine("</td>");
+                writer.WriteLine(CreateMessageWithIndentation("</tr>", 3));
+            }
+        }
+
+        writer.WriteLine(CreateMessageWithIndentation("</table>", 2));
+        writer.WriteLine(CreateMessageWithIndentation("</body>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("</html>", 0));
+    }
+
     static void Main(string[] args)
     {
-        string standardInputPath = "..\\..\\..\\input.txt";
-        string standardOutputPath = "..\\..\\..\\output.txt";
-
-        if (args.Length == 0)
+        if (args.Length < 2)
         {
-            args = [standardInputPath, standardOutputPath];
+            Console.WriteLine("В аргументах программы нужно указать два реальных пути к файлам");
+            return;
         }
 
         try
         {
-            if (string.IsNullOrEmpty(args[1]))
-            {
-                args[1] = standardOutputPath;
-            }
-        }
-        catch (IndexOutOfRangeException)
-        {
-            args = [args[0], standardOutputPath];
-        }
-
-        StreamReader reader = null;
-        StreamWriter writer = null;
-
-        try
-        {
-            reader = new StreamReader(args[0]);
-            writer = new StreamWriter(args[1]);
-
-            int indentationSize = 0;
-
-            writer.WriteLine("<!DOCTYPE html>");
-            writer.WriteLine(CreateMessageWithIndentation("<html>", indentationSize));
-            indentationSize++;
-
-            writer.WriteLine(CreateMessageWithIndentation("<head>", indentationSize));
-            indentationSize++;
-
-            writer.WriteLine(CreateMessageWithIndentation("<title>Таблица</title>", indentationSize));
-            writer.WriteLine(CreateMessageWithIndentation("<meta charset=\"utf-8\">", indentationSize));
-
-            --indentationSize;
-            writer.WriteLine(CreateMessageWithIndentation("</head>", indentationSize));
-
-            writer.WriteLine(CreateMessageWithIndentation("<body>", indentationSize));
-            indentationSize++;
-
-            writer.WriteLine(CreateMessageWithIndentation("<table border=\"1\">", indentationSize));
-            indentationSize++;
-
-            string currentLine;
-
-            bool isNewRow = true;
-
-            StringBuilder cell = new StringBuilder();
-
-            while ((currentLine = reader.ReadLine()) != null)
-            {
-                if (isNewRow)
-                {
-                    writer.WriteLine(CreateMessageWithIndentation("<tr>", indentationSize));
-                    indentationSize++;
-                }
-
-                for (int i = 0; i < currentLine.Length; i++)
-                {
-                    char currentChar = currentLine[i];
-
-                    if (currentChar == '"')
-                    {
-                        if (isNewRow || i + 1 >= currentLine.Length || currentLine[i + 1] != '"')
-                        {
-                            isNewRow = !isNewRow;
-                            continue;
-                        }
-
-                        i++;
-                    }
-
-                    if (currentChar == ',')
-                    {
-                        if (isNewRow)
-                        {
-                            writer.WriteLine(CreateMessageWithIndentation(cell.Insert(0, "<td>").Append("</td>").ToString(), indentationSize));
-
-                            cell.Clear();
-                            continue;
-                        }
-                    }
-
-                    switch (currentChar)
-                    {
-                        case '<':
-                            cell.Append("&lt;");
-                            break;
-                        case '>':
-                            cell.Append("&gt;");
-                            break;
-                        case '&':
-                            cell.Append("&amp;");
-                            break;
-                        default:
-                            cell.Append(currentChar);
-                            break;
-                    }
-                }
-
-                if (!isNewRow)
-                {
-                    cell.Append("<br/>");
-                }
-                else
-                {
-                    writer.WriteLine(CreateMessageWithIndentation(cell.Insert(0, "<td>").Append("</td>").ToString(), indentationSize));
-
-                    --indentationSize;
-                    writer.WriteLine(CreateMessageWithIndentation("</tr>", indentationSize));
-
-                    cell.Clear();
-                }
-            }
-
-            --indentationSize;
-            writer.WriteLine(CreateMessageWithIndentation("</table>", indentationSize));
-
-            --indentationSize;
-            writer.WriteLine(CreateMessageWithIndentation("</body>", indentationSize));
-
-            --indentationSize;
-            writer.WriteLine(CreateMessageWithIndentation("</html>", indentationSize));
+            ConvertCsvToHtml(args[0], args[1]);
         }
         catch (FileNotFoundException)
         {
-            throw new ArgumentException("The specified path is invalid", nameof(args));
-        }
-        finally
-        {
-            if (reader is IDisposable)
-            {
-                reader.Dispose();
-            }
-
-            if (writer is IDisposable)
-            {
-                writer.Dispose();
-            }
+            Console.WriteLine("В аргументах программы нужно указать два реальных пути к файлам");
+            return;
         }
     }
 }
