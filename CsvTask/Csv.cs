@@ -1,20 +1,19 @@
-﻿using System.Reflection.PortableExecutable;
-using System.Text;
+﻿using System.Text;
 
 namespace CsvTask;
 
 internal class Csv
 {
-    public static string CreateMessageWithIndentation(string message, int indentationSize = 0)
+    public static string CreateMessageWithIndentation(string message, int indentationSize)
     {
-        StringBuilder indentation = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         for (int i = 0; i < indentationSize; i++)
         {
-            indentation.Append('\t');
+            stringBuilder.Append('\t');
         }
 
-        return indentation.Append(message).ToString();
+        return stringBuilder.Append(message).ToString();
     }
 
     public static void ConvertCsvToHtml(string inputPath, string outputPath)
@@ -24,12 +23,12 @@ internal class Csv
 
         writer.WriteLine("<!DOCTYPE html>");
         writer.WriteLine(CreateMessageWithIndentation("<html>", 0));
-        writer.WriteLine(CreateMessageWithIndentation("<head>", 1));
-        writer.WriteLine(CreateMessageWithIndentation("<title>Таблица</title>", 2));
-        writer.WriteLine(CreateMessageWithIndentation("<meta charset=\"utf-8\">", 2));
-        writer.WriteLine(CreateMessageWithIndentation("</head>", 1));
-        writer.WriteLine(CreateMessageWithIndentation("<body>", 1));
-        writer.WriteLine(CreateMessageWithIndentation("<table border=\"1\">", 2));
+        writer.WriteLine(CreateMessageWithIndentation("<head>", 0));
+        writer.WriteLine(CreateMessageWithIndentation("<title>Таблица</title>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("<meta charset=\"utf-8\">", 1));
+        writer.WriteLine(CreateMessageWithIndentation("</head>", 0));
+        writer.WriteLine(CreateMessageWithIndentation("<body>", 0));
+        writer.WriteLine(CreateMessageWithIndentation("<table border=\"1\">", 1));
 
         string? currentLine;
 
@@ -39,8 +38,8 @@ internal class Csv
         {
             if (isNewRow)
             {
-                writer.WriteLine(CreateMessageWithIndentation("<tr>", 3));
-                writer.Write(CreateMessageWithIndentation("<td>", 4));
+                writer.WriteLine(CreateMessageWithIndentation("<tr>", 2));
+                writer.Write(CreateMessageWithIndentation("<td>", 3));
             }
 
             for (int i = 0; i < currentLine.Length; i++)
@@ -63,7 +62,7 @@ internal class Csv
                     if (isNewRow)
                     {
                         writer.WriteLine("</td>");
-                        writer.Write(CreateMessageWithIndentation("<td>", 4));
+                        writer.Write(CreateMessageWithIndentation("<td>", 3));
 
                         continue;
                     }
@@ -93,12 +92,12 @@ internal class Csv
             else
             {
                 writer.WriteLine("</td>");
-                writer.WriteLine(CreateMessageWithIndentation("</tr>", 3));
+                writer.WriteLine(CreateMessageWithIndentation("</tr>", 2));
             }
         }
 
-        writer.WriteLine(CreateMessageWithIndentation("</table>", 2));
-        writer.WriteLine(CreateMessageWithIndentation("</body>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("</table>", 1));
+        writer.WriteLine(CreateMessageWithIndentation("</body>", 0));
         writer.WriteLine(CreateMessageWithIndentation("</html>", 0));
     }
 
@@ -106,18 +105,21 @@ internal class Csv
     {
         if (args.Length < 2)
         {
-            Console.WriteLine("В аргументах программы нужно указать два реальных пути к файлам");
+            Console.WriteLine("В аргументах программы нужно указать два реальных пути к файлам. Первым путь файла для чтения, Вторым путь файла для записи");
             return;
         }
-
+        
         try
         {
             ConvertCsvToHtml(args[0], args[1]);
         }
         catch (FileNotFoundException)
         {
-            Console.WriteLine("В аргументах программы нужно указать два реальных пути к файлам");
-            return;
+            Console.WriteLine("Файл не найден!");
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Случилась непредвиденная ошибка!");
         }
     }
 }
