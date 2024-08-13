@@ -36,7 +36,7 @@ public class Matrix
     {
         if (matrix == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix)} = null", nameof(matrix));
+            throw new ArgumentNullException(nameof(matrix));
         }
 
         _rows = new Vector[matrix.RowsCount];
@@ -76,7 +76,7 @@ public class Matrix
     {
         if (vectors == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(vectors)} = null", nameof(vectors));
+            throw new ArgumentNullException(nameof(vectors));
         }
 
         if (vectors.Length == 0)
@@ -128,7 +128,7 @@ public class Matrix
 
         if (vector == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(vector)} = null", nameof(vector));
+            throw new ArgumentNullException(nameof(vector));
         }
 
         if (vector.Size != ColumnsCount)
@@ -236,7 +236,7 @@ public class Matrix
     {
         if (vector == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(vector)} = null", nameof(vector));
+            throw new ArgumentNullException(nameof(vector));
         }
 
         if (vector.Size != ColumnsCount)
@@ -254,11 +254,11 @@ public class Matrix
         return new Vector(values);
     }
 
-    private void CheckMatrixSize(Matrix matrix)
+    private static void CheckMatrixSizeEquality(Matrix matrix1, Matrix matrix2)
     {
-        if (RowsCount != matrix.RowsCount || ColumnsCount != matrix.ColumnsCount)
+        if (matrix1.RowsCount != matrix2.RowsCount || matrix1.ColumnsCount != matrix2.ColumnsCount)
         {
-            throw new ArgumentOutOfRangeException("Dimensions of the matrices do not match", nameof(matrix));
+            throw new ArgumentOutOfRangeException("Dimensions of the matrices do not match", nameof(matrix1) + ", " + nameof(matrix2));
         }
     }
 
@@ -266,10 +266,10 @@ public class Matrix
     {
         if (matrix == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix)} = null", nameof(matrix));
+            throw new ArgumentNullException(nameof(matrix));
         }
 
-        CheckMatrixSize(matrix);
+        CheckMatrixSizeEquality(this, matrix);
 
         for (int i = 0; i < RowsCount; ++i)
         {
@@ -281,10 +281,10 @@ public class Matrix
     {
         if (matrix == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix)} = null", nameof(matrix));
+            throw new ArgumentNullException(nameof(matrix));
         }
 
-        CheckMatrixSize(matrix);
+        CheckMatrixSizeEquality(this, matrix);
 
         for (int i = 0; i < RowsCount; ++i)
         {
@@ -296,18 +296,15 @@ public class Matrix
     {
         if (matrix1 == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix1)} = null", nameof(matrix1));
+            throw new ArgumentNullException(nameof(matrix1));
         }
 
         if (matrix2 == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix2)} = null", nameof(matrix2));
+            throw new ArgumentNullException(nameof(matrix2));
         }
 
-        if ((matrix1.RowsCount != matrix2.RowsCount) || (matrix1.ColumnsCount != matrix2.ColumnsCount))
-        {
-            throw new ArgumentOutOfRangeException("Dimensions of the matrices do not match", nameof(matrix1) + ", " + nameof(matrix2));
-        }
+        CheckMatrixSizeEquality(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.Add(matrix2);
@@ -319,18 +316,15 @@ public class Matrix
     {
         if (matrix1 == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix1)} = null", nameof(matrix1));
+            throw new ArgumentNullException(nameof(matrix1));
         }
 
         if (matrix2 == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix2)} = null", nameof(matrix2));
+            throw new ArgumentNullException(nameof(matrix2));
         }
 
-        if ((matrix1.RowsCount != matrix2.RowsCount) || (matrix1.ColumnsCount != matrix2.ColumnsCount))
-        {
-            throw new ArgumentOutOfRangeException("Dimensions of the matrices do not match", nameof(matrix1) + ", " + nameof(matrix2));
-        }
+        CheckMatrixSizeEquality(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.Subtract(matrix2);
@@ -342,12 +336,12 @@ public class Matrix
     {
         if (matrix1 == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix1)} = null", nameof(matrix1));
+            throw new ArgumentNullException(nameof(matrix1));
         }
 
         if (matrix2 == null)
         {
-            throw new ArgumentNullException($"Argument {nameof(matrix2)} = null", nameof(matrix2));
+            throw new ArgumentNullException(nameof(matrix2));
         }
 
         if (matrix1.ColumnsCount != matrix2.RowsCount)
