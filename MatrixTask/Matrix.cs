@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Text;
+﻿using System.Text;
 using VectorTask;
 
 namespace MatrixTask;
@@ -16,12 +15,12 @@ public class Matrix
     {
         if (rowsCount <= 0)
         {
-            throw new ArgumentOutOfRangeException($"RowsCount <= 0. Specified {nameof(rowsCount)}: {rowsCount}", nameof(rowsCount));
+            throw new ArgumentOutOfRangeException(nameof(rowsCount), $"RowsCount <= 0. Specified {nameof(rowsCount)}: {rowsCount}");
         }
 
         if (columnsCount <= 0)
         {
-            throw new ArgumentOutOfRangeException($"ColumnsCount <= 0. Specified {nameof(columnsCount)}: {columnsCount}", nameof(columnsCount));
+            throw new ArgumentOutOfRangeException(nameof(columnsCount), $"ColumnsCount <= 0. Specified {nameof(columnsCount)}: {columnsCount}");
         }
 
         _rows = new Vector[rowsCount];
@@ -133,7 +132,7 @@ public class Matrix
 
         if (vector.Size != ColumnsCount)
         {
-            throw new ArgumentOutOfRangeException($"The size of {nameof(vector)} != columnsCount. Specified {nameof(vector.Size)}: {vector.Size}", nameof(vector));
+            throw new ArgumentOutOfRangeException(nameof(vector), $"The size of {nameof(vector)} != columnsCount. Specified {nameof(vector.Size)}: {vector.Size}");
         }
 
         _rows[index] = new Vector(vector);
@@ -180,7 +179,7 @@ public class Matrix
     {
         if (RowsCount != ColumnsCount)
         {
-            throw new InvalidOperationException("This matrix is not quadratic");
+            throw new InvalidOperationException($"This matrix is not quadratic. Specified size: {RowsCount}*{ColumnsCount}");
         }
 
         double[,] matrixArray = new double[RowsCount, ColumnsCount];
@@ -241,7 +240,7 @@ public class Matrix
 
         if (vector.Size != ColumnsCount)
         {
-            throw new ArgumentOutOfRangeException($"The size of {nameof(vector)} != columnsCount. Specified {nameof(vector.Size)}: {vector.Size}", nameof(vector));
+            throw new ArgumentOutOfRangeException(nameof(vector), $"The size of {nameof(vector)} != columnsCount. Specified {nameof(vector.Size)}: {vector.Size}");
         }
 
         double[] values = new double[RowsCount];
@@ -254,11 +253,12 @@ public class Matrix
         return new Vector(values);
     }
 
-    private static void CheckMatrixSizeEquality(Matrix matrix1, Matrix matrix2)
+    private static void CheckMatrixSizesEquality(Matrix matrix1, Matrix matrix2)
     {
         if (matrix1.RowsCount != matrix2.RowsCount || matrix1.ColumnsCount != matrix2.ColumnsCount)
         {
-            throw new ArgumentOutOfRangeException("Dimensions of the matrices do not match", nameof(matrix1) + ", " + nameof(matrix2));
+            throw new ArgumentOutOfRangeException(nameof(matrix1) + ", " + nameof(matrix2), 
+                $"Dimensions of the matrices do not match. Specified sizes: {matrix1.RowsCount}*{matrix1.ColumnsCount} and {matrix2.RowsCount}*{matrix2.ColumnsCount}");
         }
     }
 
@@ -269,7 +269,7 @@ public class Matrix
             throw new ArgumentNullException(nameof(matrix));
         }
 
-        CheckMatrixSizeEquality(this, matrix);
+        CheckMatrixSizesEquality(this, matrix);
 
         for (int i = 0; i < RowsCount; ++i)
         {
@@ -284,7 +284,7 @@ public class Matrix
             throw new ArgumentNullException(nameof(matrix));
         }
 
-        CheckMatrixSizeEquality(this, matrix);
+        CheckMatrixSizesEquality(this, matrix);
 
         for (int i = 0; i < RowsCount; ++i)
         {
@@ -304,7 +304,7 @@ public class Matrix
             throw new ArgumentNullException(nameof(matrix2));
         }
 
-        CheckMatrixSizeEquality(matrix1, matrix2);
+        CheckMatrixSizesEquality(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.Add(matrix2);
@@ -324,7 +324,7 @@ public class Matrix
             throw new ArgumentNullException(nameof(matrix2));
         }
 
-        CheckMatrixSizeEquality(matrix1, matrix2);
+        CheckMatrixSizesEquality(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.Subtract(matrix2);
@@ -346,20 +346,20 @@ public class Matrix
 
         if (matrix1.ColumnsCount != matrix2.RowsCount)
         {
-            throw new ArgumentOutOfRangeException($"Column count {nameof(matrix1)} != row count {nameof(matrix2)}", nameof(matrix1) + ", " + nameof(matrix2));
+            throw new ArgumentOutOfRangeException(nameof(matrix1) + ", " + nameof(matrix2), $"Column count {nameof(matrix1)} != row count {nameof(matrix2)}");
         }
 
-        double[,] resultMatrix = new double[matrix1.RowsCount, matrix2.ColumnsCount];
+        double[,] resultArray = new double[matrix1.RowsCount, matrix2.ColumnsCount];
 
         for (int i = 0; i < matrix1.RowsCount; i++)
         {
             for (int j = 0; j < matrix2.ColumnsCount; j++)
             {
-                resultMatrix[i, j] = Vector.GetScalarProduct(matrix1._rows[i], matrix2.GetColumnByIndex(j));
+                resultArray[i, j] = Vector.GetScalarProduct(matrix1._rows[i], matrix2.GetColumnByIndex(j));
             }
         }
 
-        return new Matrix(resultMatrix);
+        return new Matrix(resultArray);
     }
 
     public override string ToString()
