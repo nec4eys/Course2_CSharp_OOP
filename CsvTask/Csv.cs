@@ -117,9 +117,9 @@ internal class Csv
         {
             Console.WriteLine("Файл не найден!");
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            Console.WriteLine("Случилась непредвиденная ошибка!");
+            Console.WriteLine($"Случилась непредвиденная ошибка! {e}");
         }
     }
 }
