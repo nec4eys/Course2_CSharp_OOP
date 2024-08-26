@@ -4,7 +4,7 @@ internal class ListMain
 {
     static void Main(string[] args)
     {
-        SingleLinkedList<int> list = new SingleLinkedList<int>();
+        SinglyLinkedList<int> list = new SinglyLinkedList<int>();
         list.Add(1);
         list.Add(2);
         list.Add(3);
@@ -12,18 +12,18 @@ internal class ListMain
 
         Console.WriteLine("Add: " + list);
 
-        Console.WriteLine("Get Head Data: " + list.GetHeadData());
+        Console.WriteLine("Get Head Data: " + list.GetFirstData());
 
-        list.InsertFirst(new ListItem<int>(6));
+        list.InsertFirst(6);
 
         Console.WriteLine("Insert First: " + list);
 
-        list.Insert(new ListItem<int>(10), 3);
+        list.Insert(10, 3);
 
         Console.WriteLine("Insert: " + list);
 
-        list.Set(3, 11);
-        Console.WriteLine("Get after set: " + list.Get(3));
+        list[3] = 11;
+        Console.WriteLine("Get after set: " + list[3]);
 
         list.RemoveByValue(2);
 
