@@ -1,42 +1,78 @@
-﻿namespace ArrayListHomeTask;
+﻿using System.Collections.Generic;
+
+namespace ArrayListHomeTask;
 
 internal class ArrayListHomeMain
 {
-    static void Main(string[] args)
+    public static void Task1()
     {
-        List<string> list1 = new List<string>();
+        List<string> listString = new List<string>();
 
-        using (StreamReader reader = new StreamReader("..\\..\\..\\input.txt"))
+        try
         {
+            using StreamReader reader = new StreamReader("..\\..\\..\\input.txt");
+
             string? currentLine;
 
             while ((currentLine = reader.ReadLine()) != null)
             {
-                list1.Add(currentLine);
+                listString.Add(currentLine);
             }
         }
-
-        Console.WriteLine(nameof(list1) + ":");
-        list1.ForEach(Console.WriteLine);
-
-        List<int> list2 = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-        list2.RemoveAll(i => i % 2 == 0);
-
-        Console.WriteLine(nameof(list2) + ":");
-        list2.ForEach(Console.WriteLine);
-
-        List<int> list3 = new List<int>() { 1, 6, 1, 2, 4, 1, 2, 3 };
-        List<int> list4 = new List<int>();
-
-        foreach (int i in list3)
+        catch (FileNotFoundException)
         {
-            if (!list4.Contains(i))
+            Console.WriteLine("Файл не найден!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Случилась непредвиденная ошибка! {e}");
+        }
+
+        Console.WriteLine("Task 1:");
+        listString.ForEach(Console.WriteLine);
+    }
+
+    public static void Task2()
+    {
+        List<int> listInt = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+        for (int i = 0; i < listInt.Count; i++)
+        {
+            int item = listInt[i];
+            if (item % 2 == 0)
             {
-                list4.Add(i);
+                listInt.RemoveAt(i);
+                i--;
             }
         }
 
-        Console.WriteLine(nameof(list4) + ":");
-        list4.ForEach(Console.WriteLine);
+        Console.WriteLine("Task 2:");
+        listInt.ForEach(Console.WriteLine);
+    }
+
+    public static void Task3()
+    {
+        List<int> listInt = new List<int>() { 1, 6, 1, 2, 4, 1, 2, 3 };
+        List<int> listIntWithoutDuplicateItems = new List<int>(listInt.Count);
+
+        foreach (int item in listInt)
+        {
+            if (!listIntWithoutDuplicateItems.Contains(item))
+            {
+                listIntWithoutDuplicateItems.Add(item);
+            }
+        }
+
+        Console.WriteLine("Task 3:");
+        listIntWithoutDuplicateItems.ForEach(Console.WriteLine);
+    }
+
+    static void Main(string[] args)
+    {
+        Task1();
+
+        Task2();
+
+        Task3();
     }
 }
