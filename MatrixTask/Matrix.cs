@@ -15,12 +15,12 @@ public class Matrix
     {
         if (rowsCount <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(rowsCount), $"RowsCount <= 0. Specified {nameof(rowsCount)}: {rowsCount}");
+            throw new ArgumentOutOfRangeException(nameof(rowsCount), $"RowsCount must be > 0. Specified {nameof(rowsCount)}: {rowsCount}");
         }
 
         if (columnsCount <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(columnsCount), $"ColumnsCount <= 0. Specified {nameof(columnsCount)}: {columnsCount}");
+            throw new ArgumentOutOfRangeException(nameof(columnsCount), $"ColumnsCount must be > 0. Specified {nameof(columnsCount)}: {columnsCount}");
         }
 
         _rows = new Vector[rowsCount];
@@ -179,7 +179,7 @@ public class Matrix
     {
         if (RowsCount != ColumnsCount)
         {
-            throw new InvalidOperationException($"This matrix is not quadratic. Specified size: {RowsCount}*{ColumnsCount}");
+            throw new InvalidOperationException($"This matrix is not quadratic. The size is now: {RowsCount}*{ColumnsCount}");
         }
 
         double[,] matrixArray = new double[RowsCount, ColumnsCount];
@@ -349,17 +349,17 @@ public class Matrix
             throw new ArgumentOutOfRangeException(nameof(matrix1) + ", " + nameof(matrix2), $"Column count {nameof(matrix1)} != row count {nameof(matrix2)}");
         }
 
-        double[,] resultArray = new double[matrix1.RowsCount, matrix2.ColumnsCount];
+        double[,] resultArrayMatrix = new double[matrix1.RowsCount, matrix2.ColumnsCount];
 
         for (int i = 0; i < matrix1.RowsCount; i++)
         {
             for (int j = 0; j < matrix2.ColumnsCount; j++)
             {
-                resultArray[i, j] = Vector.GetScalarProduct(matrix1._rows[i], matrix2.GetColumnByIndex(j));
+                resultArrayMatrix[i, j] = Vector.GetScalarProduct(matrix1._rows[i], matrix2.GetColumnByIndex(j));
             }
         }
 
-        return new Matrix(resultArray);
+        return new Matrix(resultArrayMatrix);
     }
 
     public override string ToString()
