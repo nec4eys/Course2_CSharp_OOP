@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace LambdasTask;
+﻿namespace LambdasTask;
 
 internal class LambdasMain
 {
