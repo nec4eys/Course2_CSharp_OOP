@@ -119,7 +119,7 @@ internal class Csv
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Случилась непредвиденная ошибка! {e}");
+            Console.WriteLine("Случилась непредвиденная ошибка! " + e.Message);
         }
     }
 }

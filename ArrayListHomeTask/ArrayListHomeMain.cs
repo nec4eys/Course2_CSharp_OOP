@@ -25,7 +25,7 @@ internal class ArrayListHomeMain
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Случилась непредвиденная ошибка! {e}");
+            Console.WriteLine("Случилась непредвиденная ошибка! " + e.Message);
         }
 
         Console.WriteLine("Task 1:");
