@@ -4,13 +4,6 @@ namespace HashTableTask;
 
 public class HashTable<T> : ICollection<T>
 {
-    /*
-     * TO DO
-     * Добавить исключения там где необходимо
-     * Сравнить с презентацией
-     * Проверить саму работу кода
-    */
-
     private int _size;
 
     private List<T>[] _table;

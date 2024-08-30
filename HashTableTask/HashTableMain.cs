@@ -18,7 +18,7 @@ internal class HashTableMain
         Console.WriteLine(hashTable.Contains("Q"));
         Console.WriteLine(hashTable.Count);
 
-        hashTable.Remove("Q");
+        Console.WriteLine(hashTable.Remove("Q"));
         Console.WriteLine(hashTable.Contains("Q"));
     }
 }
