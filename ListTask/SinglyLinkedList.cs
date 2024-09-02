@@ -10,22 +10,36 @@ public class SinglyLinkedList<T>
 
     public T this[int index]
     {
-        get { return GetItemByIndex(index).Data; }
-        set { GetItemByIndex(index).Data = value; }
+        get
+        {
+            CheckIndex(index);
+
+            return GetItemByIndex(index).Data;
+        }
+
+        set
+        {
+            CheckIndex(index);
+
+            GetItemByIndex(index).Data = value;
+        }
     }
 
-    private ListItem<T> GetItemByIndex(int index)
+    private void CheckIndex(int index)
     {
         if (index < 0 || index >= Count)
         {
             throw new IndexOutOfRangeException($"Index is out of range [0, {Count - 1}]. Specified {nameof(index)}: {index}");
         }
+    }
 
-        ListItem<T>? item = _head;
+    private ListItem<T> GetItemByIndex(int index)
+    {
+        ListItem<T> item = _head!;
 
         for (int i = 1; i <= index; i++)
         {
-            item = item.Next;
+            item = item.Next!;
         }
 
         return item;
@@ -43,7 +57,9 @@ public class SinglyLinkedList<T>
 
     public T SetWithReturningPreviousData(int index, T data)
     {
-        ListItem<T>? item = GetItemByIndex(index);
+        CheckIndex(index);
+
+        ListItem<T> item = GetItemByIndex(index);
 
         T previousData = item.Data;
         item.Data = data;
@@ -53,10 +69,10 @@ public class SinglyLinkedList<T>
 
     public void Add(T data)
     {
-        Insert(data, Count);
+        Insert(Count, data);
     }
 
-    public void Insert(T data, int index)
+    public void Insert(int index, T data)
     {
         if (index < 0 || index > Count)
         {
@@ -69,47 +85,48 @@ public class SinglyLinkedList<T>
             return;
         }
 
-        ListItem<T>? previousItem = GetItemByIndex(index - 1);
-        ListItem<T> newItem = new ListItem<T>(data, previousItem);
+        ListItem<T> previousItem = GetItemByIndex(index - 1);
+        ListItem<T> newItem = new ListItem<T>(data, previousItem.Next);
         previousItem.Next = newItem;
         Count++;
     }
 
     public void InsertFirst(T data)
     {
-        ListItem<T> newItem = new ListItem<T>(data, _head);
-        _head = newItem;
+        _head = new ListItem<T>(data, _head);
         Count++;
     }
 
-    public T Remove(int index)
+    public T? Remove(int index)
     {
-        if (index < 0 || index >= Count)
-        {
-            throw new IndexOutOfRangeException($"Index is out of range [0, {Count - 1}]. Specified {nameof(index)}: {index}");
-        }
+        CheckIndex(index);
 
         if (index == 0)
         {
             return RemoveFirst();
         }
 
-        ListItem<T>? previousItem = GetItemByIndex(index - 1);
+        ListItem<T> previousItem = GetItemByIndex(index - 1);
         ListItem<T>? currentItem = previousItem.Next;
 
-        T deletedData = currentItem.Data;
-        previousItem.Next = currentItem.Next;
+        T? deletedData = default;
+
+        if (currentItem != null)
+        {
+            deletedData = currentItem.Data;
+            previousItem.Next = currentItem.Next;
+        }
 
         Count--;
 
         return deletedData;
     }
 
-    public bool RemoveByValue(T value)
+    public bool RemoveByData(T data)
     {
         for (ListItem<T>? currentItem = _head, previousItem = null; currentItem != null; previousItem = currentItem, currentItem = currentItem.Next)
         {
-            if (value.Equals(currentItem.Data))
+            if ((data == null && currentItem.Data == null) || data.Equals(currentItem.Data))
             {
                 if (previousItem == null)
                 {
@@ -146,9 +163,9 @@ public class SinglyLinkedList<T>
 
     public void Reverse()
     {
-        ListItem<T>? nextItem = null, previousItem = null;
+        ListItem<T>? previousItem = null;
 
-        for (ListItem<T>? currentItem = _head; currentItem != null; previousItem = currentItem, currentItem = nextItem)
+        for (ListItem<T>? currentItem = _head, nextItem = null; currentItem != null; previousItem = currentItem, currentItem = nextItem)
         {
             nextItem = currentItem.Next;
             currentItem.Next = previousItem;
@@ -163,23 +180,23 @@ public class SinglyLinkedList<T>
 
         for (ListItem<T>? item = _head; item != null; item = item.Next)
         {
-            singlyLinkedList.Add(item.Data);
+            singlyLinkedList.InsertFirst(item.Data);
         }
+
+        singlyLinkedList.Reverse();
 
         return singlyLinkedList;
     }
 
     public override string ToString()
     {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.Append('[');
+        StringBuilder stringBuilder = new StringBuilder("[");
 
         for (ListItem<T>? item = _head; item != null; item = item.Next)
         {
-            stringBuilder.Append(item).Append(", ");
+            stringBuilder.Append(item.Data).Append(", ");
         }
 
-        return stringBuilder.Append(']').ToString();
+        return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append(']').ToString();
     }
 }

@@ -18,14 +18,14 @@ internal class ListMain
 
         Console.WriteLine("Insert First: " + list);
 
-        list.Insert(10, 3);
+        list.Insert(3, 10);
 
         Console.WriteLine("Insert: " + list);
 
         list[3] = 11;
         Console.WriteLine("Get after set: " + list[3]);
 
-        list.RemoveByValue(2);
+        list.RemoveByData(2);
 
         Console.WriteLine("Remove By Value: " + list);
 
