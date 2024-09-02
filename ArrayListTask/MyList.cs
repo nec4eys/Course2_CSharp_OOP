@@ -24,7 +24,7 @@ public class MyList<T> : IList<T>
     {
         get => _items.Length;
 
-        set
+        private set
         {
             if (value < _count)
             {
