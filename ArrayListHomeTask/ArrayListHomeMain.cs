@@ -1,22 +1,20 @@
-﻿using System.Collections.Generic;
-
-namespace ArrayListHomeTask;
+﻿namespace ArrayListHomeTask;
 
 internal class ArrayListHomeMain
 {
-    public static void Task1()
+    public static List<string> ReadFile(string filePath)
     {
-        List<string> listString = new List<string>();
+        List<string> list = new List<string>();
 
         try
         {
-            using StreamReader reader = new StreamReader("..\\..\\..\\input.txt");
+            using StreamReader reader = new StreamReader(filePath);
 
-            string? currentLine;
+            string? line;
 
-            while ((currentLine = reader.ReadLine()) != null)
+            while ((line = reader.ReadLine()) != null)
             {
-                listString.Add(currentLine);
+                list.Add(line);
             }
         }
         catch (FileNotFoundException)
@@ -28,51 +26,54 @@ internal class ArrayListHomeMain
             Console.WriteLine("Случилась непредвиденная ошибка! " + e.Message);
         }
 
-        Console.WriteLine("Task 1:");
-        listString.ForEach(Console.WriteLine);
+        return list;
     }
 
-    public static void Task2()
+    public static List<int> RemoveEvenNumbers(List<int> list)
     {
-        List<int> listInt = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-
-        for (int i = 0; i < listInt.Count; i++)
+        for (int i = list.Count - 1; i >= 0; i--)
         {
-            int item = listInt[i];
+            int item = list[i];
+
             if (item % 2 == 0)
             {
-                listInt.RemoveAt(i);
-                i--;
+                list.RemoveAt(i);
             }
         }
 
-        Console.WriteLine("Task 2:");
-        listInt.ForEach(Console.WriteLine);
+        return list;
     }
 
-    public static void Task3()
+    public static List<T> RemoveDuplicates<T>(List<T> list)
     {
-        List<int> listInt = new List<int>() { 1, 6, 1, 2, 4, 1, 2, 3 };
-        List<int> listIntWithoutDuplicateItems = new List<int>(listInt.Count);
+        List<T> listWithoutDuplicates = new List<T>(list.Count);
 
-        foreach (int item in listInt)
+        foreach (T item in list)
         {
-            if (!listIntWithoutDuplicateItems.Contains(item))
+            if (!listWithoutDuplicates.Contains(item))
             {
-                listIntWithoutDuplicateItems.Add(item);
+                listWithoutDuplicates.Add(item);
             }
         }
 
-        Console.WriteLine("Task 3:");
-        listIntWithoutDuplicateItems.ForEach(Console.WriteLine);
+        return listWithoutDuplicates;
     }
 
     static void Main(string[] args)
     {
-        Task1();
+        List<string> linesList = ReadFile("..\\..\\..\\input.txt");
 
-        Task2();
+        Console.WriteLine("Task 1:");
+        linesList.ForEach(Console.WriteLine);
 
-        Task3();
+        List<int> oddNumbersList = RemoveEvenNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+        Console.WriteLine("Task 2:");
+        oddNumbersList.ForEach(Console.WriteLine);
+
+        var listWithoutDuplicates = RemoveDuplicates([1, 6, 1, 2, 4, 1, 2, 3]);
+
+        Console.WriteLine("Task 3:");
+        listWithoutDuplicates.ForEach(Console.WriteLine);
     }
 }
