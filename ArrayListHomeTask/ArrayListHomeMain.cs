@@ -1,50 +1,37 @@
-﻿namespace ArrayListHomeTask;
+﻿using System.Collections.Generic;
+
+namespace ArrayListHomeTask;
 
 internal class ArrayListHomeMain
 {
-    public static List<string> ReadFile(string filePath)
+    public static List<string> GetListWithFileLines(string filePath)
     {
-        List<string> list = new List<string>();
+        List<string> linesFromFile = new List<string>();
 
-        try
-        {
-            using StreamReader reader = new StreamReader(filePath);
+        using StreamReader reader = new StreamReader(filePath);
+        
+        string? line;
 
-            string? line;
-
-            while ((line = reader.ReadLine()) != null)
-            {
-                list.Add(line);
-            }
-        }
-        catch (FileNotFoundException)
+        while ((line = reader.ReadLine()) != null)
         {
-            Console.WriteLine("Файл не найден!");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Случилась непредвиденная ошибка! " + e.Message);
+            linesFromFile.Add(line);
         }
 
-        return list;
+        return linesFromFile;
     }
 
-    public static List<int> RemoveEvenNumbers(List<int> list)
+    public static void RemoveEvenNumbers(List<int> list)
     {
         for (int i = list.Count - 1; i >= 0; i--)
         {
-            int item = list[i];
-
-            if (item % 2 == 0)
+            if (list[i] % 2 == 0)
             {
                 list.RemoveAt(i);
             }
         }
-
-        return list;
     }
 
-    public static List<T> RemoveDuplicates<T>(List<T> list)
+    public static List<T> GetListWithoutDuplicates<T>(List<T> list)
     {
         List<T> listWithoutDuplicates = new List<T>(list.Count);
 
@@ -61,17 +48,30 @@ internal class ArrayListHomeMain
 
     static void Main(string[] args)
     {
-        List<string> linesList = ReadFile("..\\..\\..\\input.txt");
 
-        Console.WriteLine("Task 1:");
-        linesList.ForEach(Console.WriteLine);
+        try
+        {
+            List<string> linesList = GetListWithFileLines("..\\..\\..\\input.txt");
+            Console.WriteLine("Task 1:");
+            linesList.ForEach(Console.WriteLine);
+        }
+        catch (FileNotFoundException)
+        {
+            Console.WriteLine("Файл не найден!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Случилась непредвиденная ошибка! " + e.Message);
+        }
 
-        List<int> oddNumbersList = RemoveEvenNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        List<int> oddNumbersList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        RemoveEvenNumbers(oddNumbersList);
 
         Console.WriteLine("Task 2:");
         oddNumbersList.ForEach(Console.WriteLine);
 
-        var listWithoutDuplicates = RemoveDuplicates([1, 6, 1, 2, 4, 1, 2, 3]);
+        List<int> listWithoutDuplicates = GetListWithoutDuplicates([1, 6, 1, 2, 4, 1, 2, 3]);
 
         Console.WriteLine("Task 3:");
         listWithoutDuplicates.ForEach(Console.WriteLine);
