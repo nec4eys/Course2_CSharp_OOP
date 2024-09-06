@@ -2,17 +2,13 @@
 
 public class Person
 {
-    private string _name;
+    public string Name { get; }
 
-    private int _age;
-
-    public string Name => _name;
-
-    public int Age => _age;
+    public int Age { get; }
 
     public Person(string name, int age)
     {
-        _name = name; 
-        _age = age;
+        Name = name; 
+        Age = age;
     }
 }
