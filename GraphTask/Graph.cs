@@ -9,7 +9,7 @@ public class Graph
     private bool[] visitedDepthFirstSearch;
 
     private bool[] visitedBreadthFirstSearch;
-    
+
     public delegate void Function(int value);
 
     public Graph(int[,] matrix)
