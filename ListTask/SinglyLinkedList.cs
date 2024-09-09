@@ -181,7 +181,7 @@ public class SinglyLinkedList<T>
         ListItem<T> previousItem = nextItem;
 
         singlyLinkedList._head = nextItem;
-       
+
         for (ListItem<T>? item = _head.Next; item != null; item = item.Next)
         {
             nextItem = new ListItem<T>(item.Data);
