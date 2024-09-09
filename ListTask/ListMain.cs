@@ -46,5 +46,7 @@ internal class ListMain
         list.Reverse();
 
         Console.WriteLine("Reverse: " + list);
+
+        Console.WriteLine("Copy: " + list.Copy());
     }
 }

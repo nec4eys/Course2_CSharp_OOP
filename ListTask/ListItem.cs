@@ -1,6 +1,6 @@
 ﻿namespace ListTask;
 
-public class ListItem<T>
+internal class ListItem<T>
 {
     public T Data { get; set; }
 

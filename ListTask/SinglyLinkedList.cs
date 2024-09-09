@@ -55,16 +55,16 @@ public class SinglyLinkedList<T>
         return _head.Data;
     }
 
-    public T SetWithReturningPreviousData(int index, T data)
+    public T SetWithReturningOldData(int index, T data)
     {
         CheckIndex(index);
 
         ListItem<T> item = GetItemByIndex(index);
 
-        T previousData = item.Data;
+        T oldData = item.Data;
         item.Data = data;
 
-        return previousData;
+        return oldData;
     }
 
     public void Add(T data)
@@ -86,8 +86,7 @@ public class SinglyLinkedList<T>
         }
 
         ListItem<T> previousItem = GetItemByIndex(index - 1);
-        ListItem<T> newItem = new ListItem<T>(data, previousItem.Next);
-        previousItem.Next = newItem;
+        previousItem.Next = new ListItem<T>(data, previousItem.Next);
         Count++;
     }
 
@@ -97,7 +96,7 @@ public class SinglyLinkedList<T>
         Count++;
     }
 
-    public T? Remove(int index)
+    public T Remove(int index)
     {
         CheckIndex(index);
 
@@ -107,26 +106,21 @@ public class SinglyLinkedList<T>
         }
 
         ListItem<T> previousItem = GetItemByIndex(index - 1);
-        ListItem<T>? currentItem = previousItem.Next;
+        ListItem<T> currentItem = previousItem.Next!;
 
-        T? deletedData = default;
-
-        if (currentItem != null)
-        {
-            deletedData = currentItem.Data;
-            previousItem.Next = currentItem.Next;
-        }
+        T removedData = currentItem.Data;
+        previousItem.Next = currentItem.Next;
 
         Count--;
 
-        return deletedData;
+        return removedData;
     }
 
     public bool RemoveByData(T data)
     {
         for (ListItem<T>? currentItem = _head, previousItem = null; currentItem != null; previousItem = currentItem, currentItem = currentItem.Next)
         {
-            if ((data == null && currentItem.Data == null) || data.Equals(currentItem.Data))
+            if ((Equals(data, null) && Equals(currentItem.Data, null)) || (!Equals(data, null) && data.Equals(currentItem.Data)))
             {
                 if (previousItem == null)
                 {
@@ -153,12 +147,12 @@ public class SinglyLinkedList<T>
             throw new InvalidOperationException("The List is empty!");
         }
 
-        T deletedData = _head.Data;
+        T removedData = _head.Data;
         _head = _head.Next;
 
         Count--;
 
-        return deletedData;
+        return removedData;
     }
 
     public void Reverse()
@@ -176,14 +170,24 @@ public class SinglyLinkedList<T>
 
     public SinglyLinkedList<T> Copy()
     {
-        SinglyLinkedList<T> singlyLinkedList = new SinglyLinkedList<T>();
-
-        for (ListItem<T>? item = _head; item != null; item = item.Next)
+        if (_head == null)
         {
-            singlyLinkedList.InsertFirst(item.Data);
+            return new SinglyLinkedList<T>();
         }
 
-        singlyLinkedList.Reverse();
+        SinglyLinkedList<T> singlyLinkedList = new SinglyLinkedList<T>();
+
+        ListItem<T> nextItem = new ListItem<T>(_head.Data);
+        ListItem<T> previousItem = nextItem;
+
+        singlyLinkedList._head = nextItem;
+       
+        for (ListItem<T>? item = _head.Next; item != null; item = item.Next)
+        {
+            nextItem = new ListItem<T>(item.Data);
+            previousItem.Next = nextItem;
+            previousItem = nextItem;
+        }
 
         return singlyLinkedList;
     }
