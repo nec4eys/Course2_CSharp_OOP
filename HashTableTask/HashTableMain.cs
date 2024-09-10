@@ -4,7 +4,7 @@ internal class HashTableMain
 {
     static void Main(string[] args)
     {
-        HashTable<string> hashTable = new HashTable<string>(10);
+        HashTable<string> hashTable = new HashTable<string>();
 
         hashTable.Add("Q");
         hashTable.Add("W");

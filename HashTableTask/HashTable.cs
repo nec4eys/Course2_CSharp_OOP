@@ -1,89 +1,127 @@
 ﻿using System.Collections;
+using System.Text;
 
 namespace HashTableTask;
 
 public class HashTable<T> : ICollection<T>
 {
-    private int _size;
+    private readonly List<T>[] _lists;
 
-    private List<T>[] _table;
+    private int modCount;
 
     public bool IsReadOnly => false;
 
-    public int Count
+    public int Count { get; private set; }
+
+    public HashTable(int capacity)
     {
-        get
+        if (capacity <= 0)
         {
-            int count = 0;
-
-            foreach (var list in _table)
-            {
-                count += list.Count;
-            }
-
-            return count;
+            throw new ArgumentOutOfRangeException(nameof(capacity), $"Capacity must be > 0. Specified {nameof(capacity)}: {capacity}");
         }
+
+        _lists = new List<T>[capacity];
     }
 
-    public HashTable(int size)
-    {
-        _size = size;
-        _table = new List<T>[size];
+    public HashTable() : this(10) { }
 
-        for (int i = 0; i < size; i++)
+    private int GetItemIndex(T item)
+    {
+        if (Equals(item, null))
         {
-            _table[i] = new List<T>();
+            return 0;
         }
-    }
 
-    private int GetHashCode(T item)
-    {
-        return Math.Abs(item.GetHashCode() % _size);
+        return Math.Abs(item.GetHashCode() % _lists.Length);
     }
 
     public void Add(T item)
     {
-        int index = GetHashCode(item);
-        _table[index].Add(item);
+        int index = GetItemIndex(item);
+
+        if (Equals(_lists[index], null))
+        {
+            _lists[index] = new List<T>();
+        }
+
+        _lists[index].Add(item);
+
+        Count++;
+        modCount++;
     }
 
     public void Clear()
     {
-        for (int i = 0; i < _size; i++)
+        for (int i = 0; i < _lists.Length; i++)
         {
-            _table[i].Clear();
+            _lists[i].Clear();
         }
+
+        Count = 0;
+        modCount++;
     }
 
     public bool Contains(T item)
     {
-        int index = GetHashCode(item);
+        int index = GetItemIndex(item);
 
-        return _table[index].Contains(item);
+        return _lists[index].Contains(item);
     }
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        foreach (var list in _table)
+        if (Equals(array, null))
         {
-            list.CopyTo(array, arrayIndex);
-            arrayIndex += list.Count;
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (arrayIndex < 0 || arrayIndex >= array.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index is out of range [0, {array.Length - 1}]. Specified {nameof(arrayIndex)}: {arrayIndex}");
+        }
+
+        if (array.Rank != 1)
+        {
+            throw new ArgumentException("The array is not one-dimensional", nameof(array));
+        }
+
+        if (Count > array.Length - arrayIndex)
+        {
+            throw new ArgumentException("There is not enough space in the array to copy", nameof(array));
+        }
+
+        int index = arrayIndex;
+
+        foreach (List<T> list in _lists)
+        {
+            list.CopyTo(array, index);
+            index += list.Count;
         }
     }
 
     public bool Remove(T item)
     {
-        int index = GetHashCode(item);
+        int index = GetItemIndex(item);
 
-        return _table[index].Remove(item);
+        Count--;
+        modCount++;
+
+        return _lists[index].Remove(item);
     }
 
     public IEnumerator<T> GetEnumerator()
     {
-        foreach (var list in _table)
+        int fixedModCount = modCount;
+
+        foreach (List<T> list in _lists)
         {
-            foreach (var item in list)
+            foreach (T item in list)
             {
+                if (fixedModCount != modCount)
+                {
+                    throw new InvalidOperationException("The HashTable has been changed");
+                }
+
                 yield return item;
             }
         }
@@ -92,5 +130,20 @@ public class HashTable<T> : ICollection<T>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+        StringBuilder stringBuilder = new StringBuilder("{");
+
+        for (int i = 0; i < _lists.Length; i++)
+        {
+            if (!Equals(_lists[i], null))
+            {
+                _lists[i].ForEach(item => stringBuilder.Append(Equals(item, null) ? "null" : item).Append(", "));
+            }
+        }
+
+        return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
     }
 }
