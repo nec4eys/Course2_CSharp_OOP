@@ -4,7 +4,7 @@ internal class ArrayListMain
 {
     static void Main(string[] args)
     {
-        var myList = new MyList<int>(10);
+        var myList = new CustomList<int>(10);
 
         myList.Add(1);
         myList.Add(2);
@@ -14,5 +14,7 @@ internal class ArrayListMain
         Console.WriteLine(myList[1]);
 
         myList.TrimExcess();
+
+        Console.WriteLine(myList);
     }
 }
