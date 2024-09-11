@@ -2,6 +2,11 @@
 {
     internal class TreeMain
     {
+        public static void ActionWithNode<T>(T node)
+        {
+            Console.WriteLine(node + " ");
+        }
+
         static void Main(string[] args)
         {
             BinarySearchTree<int> tree = new BinarySearchTree<int>();
@@ -14,23 +19,25 @@
             tree.Insert(60);
             tree.Insert(80);
 
+            Console.WriteLine(tree);
+
             Console.WriteLine("Обход в глубину (рекурсивный):");
-            tree.DepthFirstSearch();
+            tree.DepthFirstSearch(ActionWithNode);
             Console.WriteLine();
 
             Console.WriteLine("Обход в глубину (не рекурсивный):");
-            tree.DepthFirstSearchNonRec();
+            tree.DepthFirstSearchNonRecursive(ActionWithNode);
             Console.WriteLine();
 
             Console.WriteLine("Обход в ширину:");
-            tree.BreadthFirstSearch();
+            tree.BreadthFirstSearch(ActionWithNode);
             Console.WriteLine();
 
-            Console.WriteLine("Число элементов: " + tree.Count());
+            Console.WriteLine("Число элементов: " + tree.Count);
 
-            tree.Delete(20);
+            Console.WriteLine(tree.Remove(50));
             Console.WriteLine("После удаления:");
-            tree.DepthFirstSearch();
+            tree.BreadthFirstSearch(ActionWithNode);
         }
     }
 }

@@ -1,161 +1,234 @@
-﻿namespace TreeTask;
+﻿using System.Text;
+using System.Xml.Linq;
+
+namespace TreeTask;
 
 public class BinarySearchTree<T>
 {
     private TreeNode<T>? _root;
 
+    private Comparer<T> _comparer;
+
+    public BinarySearchTree()
+    {
+        _comparer = Comparer<T>.Default;
+    }
+
+    public BinarySearchTree(Comparer<T> comparer)
+    {
+        _comparer = comparer;
+    }
+
+    public int Count { get; private set; }
+
+    public delegate void Function(T data);
+
     public void Insert(T data)
     {
-        _root = InsertRec(_root, data);
+        TreeNode<T>? node = _root;
+
+        Count++;
+
+        while (!Equals(node, null))
+        {
+            int comparison = _comparer.Compare(data, node.Data);
+
+            if (comparison <= 0)
+            {
+                if (Equals(node.LeftChild, null))
+                {
+                    node.LeftChild = new TreeNode<T>(data);
+                    return;
+                }
+
+                node = node.LeftChild;
+            }
+            else
+            {
+                if (Equals(node.RightChild, null))
+                {
+                    node.RightChild = new TreeNode<T>(data);
+                    return;
+                }
+
+                node = node.RightChild;
+            }
+        }
+
+        _root = new TreeNode<T>(data);
     }
 
-    private static TreeNode<T>? InsertRec(TreeNode<T>? node, T data)
+    public bool Contains(T data)
     {
-        if (node == null)
-        { 
-            return new TreeNode<T>(data); 
+        TreeNode<T>? node = _root;
+
+        while (!Equals(node, null))
+        {
+            int comparison = _comparer.Compare(data, node.Data);
+
+            if (comparison == 0)
+            {
+                return true;
+            }
+
+            if (comparison < 0)
+            {
+                node = node.LeftChild;
+            }
+            else
+            {
+                node = node.RightChild;
+            }
         }
 
-        int comparison = Comparer<T>.Default.Compare(data, node.Data);
-
-        if (comparison < 0)
-        { 
-            node.LeftChild = InsertRec(node.LeftChild, data); 
-        }
-        else if (comparison > 0)
-        { 
-            node.RightChild = InsertRec(node.RightChild, data); 
-        }
-
-        return node;
+        return false;
     }
 
-    public TreeNode<T>? Search(T data)
+    public bool Remove(T data)
     {
-        return SearchRec(_root, data);
-    }
+        TreeNode<T>? node = _root;
+        TreeNode<T>? parentNode = _root;
+        bool isLeftChild = true;
 
-    private static TreeNode<T>? SearchRec(TreeNode<T>? node, T data)
-    {
-        if (node == null || node.Data.Equals(data))
-        { 
-            return node; 
+        while (!Equals(node, null))
+        {
+            int comparison = _comparer.Compare(data, node.Data);
+
+            if (comparison == 0)
+            {
+                bool isRootRemove = _comparer.Compare(node.Data, _root!.Data) == 0;
+
+                bool haveLeftChild = !Equals(node.LeftChild, null);
+                bool haveRightChild = !Equals(node.RightChild, null);
+
+                if (haveLeftChild && haveRightChild) // Удаление узла с двумя детьми
+                {
+                    TreeNode<T> leftmostNode = node.RightChild!;
+                    TreeNode<T> parentLeftmostNode = node;
+
+                    while (!Equals(leftmostNode.LeftChild, null))
+                    {
+                        parentLeftmostNode = leftmostNode;
+                        leftmostNode = leftmostNode.LeftChild;
+                    }
+
+                    if (_comparer.Compare(parentLeftmostNode.Data, node.Data) == 0)
+                    {
+                        parentLeftmostNode.RightChild = leftmostNode.RightChild;
+                    }
+                    else
+                    {
+                        parentLeftmostNode.LeftChild = leftmostNode.RightChild;
+                    }
+
+                    leftmostNode.LeftChild = node.LeftChild;
+                    leftmostNode.RightChild = node.RightChild;
+
+                    SetNewNode(leftmostNode, parentNode!, isLeftChild, isRootRemove);
+                }
+                else if (haveLeftChild && !haveRightChild) // Удаление узла с одним ребенком слева
+                {
+                    SetNewNode(node.LeftChild, parentNode!, isLeftChild, isRootRemove);
+                }
+                else if (!haveLeftChild && haveRightChild) // Удаление узла с одним ребенком справа
+                {
+                    SetNewNode(node.RightChild, parentNode!, isLeftChild, isRootRemove);
+                }
+                else // Удаление листа
+                {
+                    SetNewNode(null, parentNode!, isLeftChild, isRootRemove);
+                }
+
+                Count--;
+
+                return true;
+            }
+
+            parentNode = node;
+
+            if (comparison < 0)
+            {
+                isLeftChild = true;
+                node = node.LeftChild;
+            }
+            else
+            {
+                isLeftChild = false;
+                node = node.RightChild;
+            }
         }
 
-        return Comparer<T>.Default.Compare(data, node.Data) < 0 ? SearchRec(node.LeftChild, data) : SearchRec(node.RightChild, data);
+        return false;
     }
 
-    public void Delete(T data)
+    private void SetNewNode(TreeNode<T>? newNode, TreeNode<T> parentNode, bool isLeftChild, bool isRootRemove) // rename
     {
-        _root = DeleteRec(_root, data);
-    }
-
-    private static TreeNode<T>? DeleteRec(TreeNode<T>? node, T data)
-    {
-        if (node == null) 
-        { 
-            return node; 
-        }
-
-        int comparison = Comparer<T>.Default.Compare(data, node.Data);
-
-        if (comparison < 0)
-        { 
-            node.LeftChild = DeleteRec(node.LeftChild, data); 
-        }
-        else if (comparison > 0)
-        { 
-            node.RightChild = DeleteRec(node.RightChild, data); 
+        if (isRootRemove)
+        {
+            _root = newNode;
         }
         else
         {
-            if (node.LeftChild == null) 
-            { 
-                return node.RightChild; 
+            if (isLeftChild)
+            {
+                parentNode.LeftChild = newNode;
             }
-            else if (node.RightChild == null) 
-            { 
-                return node.LeftChild; 
+            else
+            {
+                parentNode.RightChild = newNode;
             }
-
-            node.Data = MinData(node.RightChild);
-            node.RightChild = DeleteRec(node.RightChild, node.Data);
         }
-
-        return node;
     }
 
-    private static T MinData(TreeNode<T> node)
+    public void DepthFirstSearch(Function action)
     {
-        T minVData = node.Data;
-
-        while (node.LeftChild != null)
-        {
-            minVData = node.LeftChild.Data;
-            node = node.LeftChild;
-        }
-
-        return minVData;
+        DepthFirstSearchRecursive(_root, action);
     }
 
-    public int Count()
-    {
-        return CountRec(_root);
-    }
-
-    private static int CountRec(TreeNode<T>? node)
-    {
-        if (node == null) 
-        { 
-            return 0; 
-        }
-
-        return CountRec(node.LeftChild) + CountRec(node.RightChild) + 1;
-    }
-
-    public void DepthFirstSearch()
-    {
-        DepthFirstSearchRec(_root);
-    }
-
-    private static void DepthFirstSearchRec(TreeNode<T>? node)
+    private static void DepthFirstSearchRecursive(TreeNode<T>? node, Function action)
     {
         if (node != null)
         {
-            BinarySearchTree<T>.DepthFirstSearchRec(node.LeftChild);
+            action(node.Data);
 
-            Console.Write(node.Data + " ");
-
-            BinarySearchTree<T>.DepthFirstSearchRec(node.RightChild);
+            DepthFirstSearchRecursive(node.LeftChild, action);
+            DepthFirstSearchRecursive(node.RightChild, action);
         }
     }
 
-    public void DepthFirstSearchNonRec()
+    public void DepthFirstSearchNonRecursive(Function action)
     {
-        Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
-        TreeNode<T>? current = _root;
-
-        while (current != null || stack.Count > 0)
+        if (_root == null)
         {
-            while (current != null)
+            return;
+        }
+
+        Stack<TreeNode<T>> stack = new Stack<TreeNode<T>>();
+        stack.Push(_root);
+
+        while (stack.Count > 0)
+        {
+            TreeNode<T> node = stack.Pop();
+
+            action(node.Data);
+
+            if (node.RightChild != null)
             {
-                stack.Push(current);
-                current = current.LeftChild;
+                stack.Push(node.RightChild);
             }
 
-            current = stack.Pop();
-
-            Console.Write(current.Data + " ");
-
-            current = current.RightChild;
+            if (node.LeftChild != null)
+            {
+                stack.Push(node.LeftChild);
+            }
         }
     }
 
-    public void BreadthFirstSearch()
+    public void BreadthFirstSearch(Function action)
     {
-        if (_root == null) 
-        { 
-            return; 
+        if (_root == null)
+        {
+            return;
         }
 
         Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
@@ -165,17 +238,47 @@ public class BinarySearchTree<T>
         {
             TreeNode<T> node = queue.Dequeue();
 
-            Console.Write(node.Data + " ");
+            action(node.Data);
 
             if (node.LeftChild != null)
-            { 
-                queue.Enqueue(node.LeftChild); 
+            {
+                queue.Enqueue(node.LeftChild);
             }
 
-            if (node.RightChild != null) 
-            { 
-                queue.Enqueue(node.RightChild); 
+            if (node.RightChild != null)
+            {
+                queue.Enqueue(node.RightChild);
             }
         }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder stringBuilder = new StringBuilder("{");
+
+        if (!Equals(_root, null))
+        {
+            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
+            queue.Enqueue(_root);
+
+            while (queue.Count > 0)
+            {
+                TreeNode<T> node = queue.Dequeue();
+
+                stringBuilder.Append(node.Data).Append(", ");
+
+                if (node.LeftChild != null)
+                {
+                    queue.Enqueue(node.LeftChild);
+                }
+
+                if (node.RightChild != null)
+                {
+                    queue.Enqueue(node.RightChild);
+                }
+            }
+        }
+
+        return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
     }
 }
