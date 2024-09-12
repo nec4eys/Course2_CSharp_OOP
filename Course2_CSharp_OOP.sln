@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LambdasTask", "LambdasTask\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphTask", "GraphTask\GraphTask.csproj", "{0F8F21F1-E708-4503-A1D9-77AF861796AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashTableTask", "HashTableTask\HashTableTask.csproj", "{41B41EA5-1C19-42D8-BA6F-EB90F4284290}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HashTableTask", "HashTableTask\HashTableTask.csproj", "{41B41EA5-1C19-42D8-BA6F-EB90F4284290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeTask", "TreeTask\TreeTask.csproj", "{1D57E6C9-66C5-46B9-A269-F2F0E1278707}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TreeTask", "TreeTask\TreeTask.csproj", "{1D57E6C9-66C5-46B9-A269-F2F0E1278707}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemperatureTask", "TemperatureTask\TemperatureTask.csproj", "{427FE7D7-EF9C-4C60-9532-F731D57B6AD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{1D57E6C9-66C5-46B9-A269-F2F0E1278707}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D57E6C9-66C5-46B9-A269-F2F0E1278707}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D57E6C9-66C5-46B9-A269-F2F0E1278707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{427FE7D7-EF9C-4C60-9532-F731D57B6AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{427FE7D7-EF9C-4C60-9532-F731D57B6AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{427FE7D7-EF9C-4C60-9532-F731D57B6AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{427FE7D7-EF9C-4C60-9532-F731D57B6AD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
