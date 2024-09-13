@@ -7,7 +7,7 @@ internal class ArrayListHomeMain
         List<string> linesFromFile = new List<string>();
 
         using StreamReader reader = new StreamReader(filePath);
-        
+
         string? line;
 
         while ((line = reader.ReadLine()) != null)
