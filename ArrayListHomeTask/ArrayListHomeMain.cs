@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace ArrayListHomeTask;
+﻿namespace ArrayListHomeTask;
 
 internal class ArrayListHomeMain
 {
-    public static List<string> GetListWithFileLines(string filePath)
+    public static List<string> GetFileLinesList(string filePath)
     {
         List<string> linesFromFile = new List<string>();
 
@@ -48,10 +46,9 @@ internal class ArrayListHomeMain
 
     static void Main(string[] args)
     {
-
         try
         {
-            List<string> linesList = GetListWithFileLines("..\\..\\..\\input.txt");
+            List<string> linesList = GetFileLinesList("..\\..\\..\\input.txt");
             Console.WriteLine("Task 1:");
             linesList.ForEach(Console.WriteLine);
         }
@@ -64,12 +61,12 @@ internal class ArrayListHomeMain
             Console.WriteLine("Случилась непредвиденная ошибка! " + e.Message);
         }
 
-        List<int> oddNumbersList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        List<int> numbersList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-        RemoveEvenNumbers(oddNumbersList);
+        RemoveEvenNumbers(numbersList);
 
         Console.WriteLine("Task 2:");
-        oddNumbersList.ForEach(Console.WriteLine);
+        numbersList.ForEach(Console.WriteLine);
 
         List<int> listWithoutDuplicates = GetListWithoutDuplicates([1, 6, 1, 2, 4, 1, 2, 3]);
 
