@@ -53,8 +53,7 @@ internal class LambdasMain
         // Д
         IEnumerable<Person> peopleInRange = people
             .Where(p => p.Age >= 20 && p.Age <= 45)
-            .OrderByDescending(p => p.Age)
-            .Select(p => p);
+            .OrderByDescending(p => p.Age);
 
         Console.WriteLine("Люди, возраст которых от 20 до 45:");
 
