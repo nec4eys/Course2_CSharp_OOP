@@ -24,9 +24,9 @@ internal class GraphMain
         graph.BreadthFirstSearch(ActionWithNode);
 
         Console.WriteLine("Обход в глубину (не рекурсивный):");
-        graph.DepthFirstSearchNonRec(ActionWithNode);
+        graph.DepthFirstSearch(ActionWithNode);
 
         Console.WriteLine("Обход в глубину (рекурсивный):");
-        graph.DepthFirstSearchRec(ActionWithNode);
+        graph.DepthFirstSearchRecursive(ActionWithNode);
     }
 }

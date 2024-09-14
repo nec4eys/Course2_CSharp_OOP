@@ -1,61 +1,66 @@
-﻿using System.ComponentModel;
-
-namespace GraphTask;
+﻿namespace GraphTask;
 
 public class Graph
 {
-    private int[,] graphMatrix;
+    private int[,] matrix;
 
-    private bool[] visitedDepthFirstSearch;
-
-    private bool[] visitedBreadthFirstSearch;
-
-    public delegate void Function(int value);
+    //public delegate void Function(int value);
 
     public Graph(int[,] matrix)
     {
-        graphMatrix = matrix;
+        if (matrix == null)
+        {
+            throw new ArgumentNullException(nameof(matrix));
+        }
 
-        visitedDepthFirstSearch = new bool[graphMatrix.GetLength(0)];
-        visitedBreadthFirstSearch = new bool[graphMatrix.GetLength(0)];
+        if (matrix.GetLength(0) != matrix.GetLength(1))
+        {
+            throw new ArgumentException($"Matrix is not quadratic. The size is now: {matrix.GetLength(0)}*{matrix.GetLength(1)}", nameof(matrix));
+        }
+
+        this.matrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
+        Array.Copy(matrix, 0, this.matrix, 0, matrix.Length);
     }
 
-    public void DepthFirstSearchNonRec(Function action)
+    public void DepthFirstSearch(Action<int> action)
     {
-        visitedDepthFirstSearch = new bool[graphMatrix.GetLength(0)];
+        bool[] visitedDepthFirstSearch = new bool[matrix.GetLength(0)];
 
-        for (int i = 0; i < graphMatrix.GetLength(0); i++)
+        Stack<int> stack = new Stack<int>();
+
+        for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            if (!visitedDepthFirstSearch[i])
+            if (visitedDepthFirstSearch[i])
             {
-                Stack<int> stack = new Stack<int>();
-                stack.Push(i);
-                visitedDepthFirstSearch[i] = true;
+                continue;
+            }
 
-                while (stack.Count > 0)
+            stack.Push(i);
+            visitedDepthFirstSearch[i] = true;
+
+            while (stack.Count > 0)
+            {
+                int vertex = stack.Pop();
+
+                action(vertex);
+
+                for (int j = matrix.GetLength(0) - 1; j >= 0; j--)
                 {
-                    int node = stack.Pop();
-
-                    action(node);
-
-                    for (int j = graphMatrix.GetLength(0) - 1; j >= 0; j--)
+                    if (matrix[vertex, j] != 0 && !visitedDepthFirstSearch[j])
                     {
-                        if (graphMatrix[node, j] == 1 && !visitedDepthFirstSearch[j])
-                        {
-                            stack.Push(j);
-                            visitedDepthFirstSearch[j] = true;
-                        }
+                        stack.Push(j);
+                        visitedDepthFirstSearch[j] = true;
                     }
                 }
             }
         }
     }
 
-    public void DepthFirstSearchRec(Function action)
+    public void DepthFirstSearchRecursive(Action<int> action)
     {
-        bool[] visited = new bool[graphMatrix.GetLength(0)];
+        bool[] visited = new bool[matrix.GetLength(0)];
 
-        for (int i = 0; i < graphMatrix.GetLength(0); i++)
+        for (int i = 0; i < matrix.GetLength(0); i++)
         {
             if (!visited[i])
             {
@@ -64,46 +69,49 @@ public class Graph
         }
     }
 
-    private void DepthFirstSearch(int node, bool[] visited, Function action)
+    private void DepthFirstSearch(int vertex, bool[] visited, Action<int> action)
     {
-        visited[node] = true;
+        visited[vertex] = true;
 
-        action(node);
+        action(vertex);
 
-        for (int i = 0; i < graphMatrix.GetLength(0); i++)
+        for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            if (graphMatrix[node, i] == 1 && !visited[i])
+            if (matrix[vertex, i] != 0 && !visited[i])
             {
                 DepthFirstSearch(i, visited, action);
             }
         }
     }
 
-    public void BreadthFirstSearch(Function action)
+    public void BreadthFirstSearch(Action<int> action)
     {
-        visitedBreadthFirstSearch = new bool[graphMatrix.GetLength(0)];
+        bool[] visitedBreadthFirstSearch = new bool[matrix.GetLength(0)];
 
-        for (int i = 0; i < graphMatrix.GetLength(0); i++)
+        Queue<int> queue = new Queue<int>();
+
+        for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            if (!visitedBreadthFirstSearch[i])
+            if (visitedBreadthFirstSearch[i])
             {
-                Queue<int> queue = new Queue<int>();
-                queue.Enqueue(i);
-                visitedBreadthFirstSearch[i] = true;
+                continue;
+            }
 
-                while (queue.Count > 0)
+            queue.Enqueue(i);
+            visitedBreadthFirstSearch[i] = true;
+
+            while (queue.Count > 0)
+            {
+                int vertex = queue.Dequeue();
+
+                action(vertex);
+
+                for (int j = 0; j < matrix.GetLength(0); j++)
                 {
-                    int node = queue.Dequeue();
-
-                    action(node);
-
-                    for (int j = 0; j < graphMatrix.GetLength(0); j++)
+                    if (matrix[vertex, j] != 0 && !visitedBreadthFirstSearch[j])
                     {
-                        if (graphMatrix[node, j] == 1 && !visitedBreadthFirstSearch[j])
-                        {
-                            queue.Enqueue(j);
-                            visitedBreadthFirstSearch[j] = true;
-                        }
+                        queue.Enqueue(j);
+                        visitedBreadthFirstSearch[j] = true;
                     }
                 }
             }
