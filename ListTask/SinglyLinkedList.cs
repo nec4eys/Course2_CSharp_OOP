@@ -193,7 +193,7 @@ public class SinglyLinkedList<T>
 
     public override string ToString()
     {
-        if ( _head == null)
+        if (_head == null)
         {
             return "[Список пуст]";
         }
