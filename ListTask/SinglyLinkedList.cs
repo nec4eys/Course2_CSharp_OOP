@@ -120,7 +120,7 @@ public class SinglyLinkedList<T>
     {
         for (ListItem<T>? currentItem = _head, previousItem = null; currentItem != null; previousItem = currentItem, currentItem = currentItem.Next)
         {
-            if ((Equals(data, null) && Equals(currentItem.Data, null)) || (!Equals(data, null) && data.Equals(currentItem.Data)))
+            if ((Equals(data) && Equals(currentItem.Data)) || (!Equals(data) && data!.Equals(currentItem.Data)))
             {
                 if (previousItem == null)
                 {
@@ -159,7 +159,7 @@ public class SinglyLinkedList<T>
     {
         ListItem<T>? previousItem = null;
 
-        for (ListItem<T>? currentItem = _head, nextItem = null; currentItem != null; previousItem = currentItem, currentItem = nextItem)
+        for (ListItem<T>? currentItem = _head, nextItem; currentItem != null; previousItem = currentItem, currentItem = nextItem)
         {
             nextItem = currentItem.Next;
             currentItem.Next = previousItem;
@@ -175,25 +175,29 @@ public class SinglyLinkedList<T>
             return new SinglyLinkedList<T>();
         }
 
-        SinglyLinkedList<T> singlyLinkedList = new SinglyLinkedList<T>();
+        SinglyLinkedList<T> newSinglyLinkedList = new SinglyLinkedList<T>();
 
-        ListItem<T> nextItem = new ListItem<T>(_head.Data);
-        ListItem<T> previousItem = nextItem;
+        ListItem<T> currentItemInNewList = new ListItem<T>(_head.Data);
 
-        singlyLinkedList._head = nextItem;
+        newSinglyLinkedList._head = currentItemInNewList;
 
-        for (ListItem<T>? item = _head.Next; item != null; item = item.Next)
+        for (ListItem<T>? itemFromOriginalList = _head.Next, nextItemInNewList; itemFromOriginalList != null; itemFromOriginalList = itemFromOriginalList.Next)
         {
-            nextItem = new ListItem<T>(item.Data);
-            previousItem.Next = nextItem;
-            previousItem = nextItem;
+            nextItemInNewList = new ListItem<T>(itemFromOriginalList.Data);
+            currentItemInNewList.Next = nextItemInNewList;
+            currentItemInNewList = nextItemInNewList;
         }
 
-        return singlyLinkedList;
+        return newSinglyLinkedList;
     }
 
     public override string ToString()
     {
+        if ( _head == null)
+        {
+            return "[Список пуст]";
+        }
+
         StringBuilder stringBuilder = new StringBuilder("[");
 
         for (ListItem<T>? item = _head; item != null; item = item.Next)

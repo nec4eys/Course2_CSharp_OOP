@@ -4,7 +4,9 @@ internal class ListMain
 {
     static void Main(string[] args)
     {
+
         SinglyLinkedList<int> list = new SinglyLinkedList<int>();
+
         list.Add(1);
         list.Add(2);
         list.Add(3);
