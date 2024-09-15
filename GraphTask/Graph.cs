@@ -2,9 +2,7 @@
 
 public class Graph
 {
-    private int[,] matrix;
-
-    //public delegate void Function(int value);
+    private int[,] _matrix;
 
     public Graph(int[,] matrix)
     {
@@ -18,17 +16,17 @@ public class Graph
             throw new ArgumentException($"Matrix is not quadratic. The size is now: {matrix.GetLength(0)}*{matrix.GetLength(1)}", nameof(matrix));
         }
 
-        this.matrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
-        Array.Copy(matrix, 0, this.matrix, 0, matrix.Length);
+        _matrix = new int[matrix.GetLength(0), matrix.GetLength(1)];
+        Array.Copy(matrix, 0, _matrix, 0, matrix.Length);
     }
 
     public void DepthFirstSearch(Action<int> action)
     {
-        bool[] visitedDepthFirstSearch = new bool[matrix.GetLength(0)];
+        bool[] visitedDepthFirstSearch = new bool[_matrix.GetLength(0)];
 
         Stack<int> stack = new Stack<int>();
 
-        for (int i = 0; i < matrix.GetLength(0); i++)
+        for (int i = 0; i < _matrix.GetLength(0); i++)
         {
             if (visitedDepthFirstSearch[i])
             {
@@ -44,9 +42,9 @@ public class Graph
 
                 action(vertex);
 
-                for (int j = matrix.GetLength(0) - 1; j >= 0; j--)
+                for (int j = _matrix.GetLength(0) - 1; j >= 0; j--)
                 {
-                    if (matrix[vertex, j] != 0 && !visitedDepthFirstSearch[j])
+                    if (_matrix[vertex, j] != 0 && !visitedDepthFirstSearch[j])
                     {
                         stack.Push(j);
                         visitedDepthFirstSearch[j] = true;
@@ -58,9 +56,9 @@ public class Graph
 
     public void DepthFirstSearchRecursive(Action<int> action)
     {
-        bool[] visited = new bool[matrix.GetLength(0)];
+        bool[] visited = new bool[_matrix.GetLength(0)];
 
-        for (int i = 0; i < matrix.GetLength(0); i++)
+        for (int i = 0; i < _matrix.GetLength(0); i++)
         {
             if (!visited[i])
             {
@@ -75,9 +73,9 @@ public class Graph
 
         action(vertex);
 
-        for (int i = 0; i < matrix.GetLength(0); i++)
+        for (int i = 0; i < _matrix.GetLength(0); i++)
         {
-            if (matrix[vertex, i] != 0 && !visited[i])
+            if (_matrix[vertex, i] != 0 && !visited[i])
             {
                 DepthFirstSearch(i, visited, action);
             }
@@ -86,11 +84,11 @@ public class Graph
 
     public void BreadthFirstSearch(Action<int> action)
     {
-        bool[] visitedBreadthFirstSearch = new bool[matrix.GetLength(0)];
+        bool[] visitedBreadthFirstSearch = new bool[_matrix.GetLength(0)];
 
         Queue<int> queue = new Queue<int>();
 
-        for (int i = 0; i < matrix.GetLength(0); i++)
+        for (int i = 0; i < _matrix.GetLength(0); i++)
         {
             if (visitedBreadthFirstSearch[i])
             {
@@ -106,9 +104,9 @@ public class Graph
 
                 action(vertex);
 
-                for (int j = 0; j < matrix.GetLength(0); j++)
+                for (int j = 0; j < _matrix.GetLength(0); j++)
                 {
-                    if (matrix[vertex, j] != 0 && !visitedBreadthFirstSearch[j])
+                    if (_matrix[vertex, j] != 0 && !visitedBreadthFirstSearch[j])
                     {
                         queue.Enqueue(j);
                         visitedBreadthFirstSearch[j] = true;
