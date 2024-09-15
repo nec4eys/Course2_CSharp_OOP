@@ -21,8 +21,6 @@ public class BinarySearchTree<T>
 
     public int Count { get; private set; }
 
-    public delegate void Function(T data);
-
     public void Insert(T data)
     {
         TreeNode<T>? node = _root;
@@ -180,12 +178,12 @@ public class BinarySearchTree<T>
         }
     }
 
-    public void DepthFirstSearch(Function action)
+    public void DepthFirstSearch(Action<T> action)
     {
         DepthFirstSearchRecursive(_root, action);
     }
 
-    private static void DepthFirstSearchRecursive(TreeNode<T>? node, Function action)
+    private static void DepthFirstSearchRecursive(TreeNode<T>? node, Action<T> action)
     {
         if (node != null)
         {
@@ -196,7 +194,7 @@ public class BinarySearchTree<T>
         }
     }
 
-    public void DepthFirstSearchNonRecursive(Function action)
+    public void DepthFirstSearchNonRecursive(Action<T> action)
     {
         if (_root == null)
         {
@@ -224,7 +222,7 @@ public class BinarySearchTree<T>
         }
     }
 
-    public void BreadthFirstSearch(Function action)
+    public void BreadthFirstSearch(Action<T> action)
     {
         if (_root == null)
         {
