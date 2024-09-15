@@ -8,7 +8,30 @@ internal class TemperatureConversion
 
     const double epsilone = 1.0e-10;
 
-    public static double GetKelvinFromCelsius(double degreesCelsius)
+    public static double ConvertTemperatureFromOneScaleToAnother(double degrees, string fromScale, string toScale)
+    {
+        degrees = Math.Round(degrees, 3);
+
+        if (fromScale == "" || toScale == "" || fromScale == toScale)
+        {
+            throw new ArgumentException("Two different scales should be specified", nameof(fromScale) + " " + nameof(toScale));
+        }
+
+        double resultDegrees = (toScale + fromScale) switch
+        {
+            "KC" => GetKelvinFromCelsius(degrees),
+            "KF" => GetKelvinFromFahrenheit(degrees),
+            "CK" => GetCelsiusFromKelvin(degrees),
+            "CF" => GetCelsiusFromFahrenheit(degrees),
+            "FC" => GetFahrenheitFromCelsius(degrees),
+            "FK" => GetFahrenheitFromKelvin(degrees),
+            _ => throw new ArgumentException("Incorrect temperature scales", nameof(fromScale) + " " + nameof(toScale)),
+        };
+
+        return Math.Round(resultDegrees, 3);
+    }
+
+    private static double GetKelvinFromCelsius(double degreesCelsius)
     {
         if (degreesCelsius - absoluteZeroCelsius < -epsilone)
         {
@@ -18,7 +41,7 @@ internal class TemperatureConversion
         return degreesCelsius - absoluteZeroCelsius;
     }
 
-    public static double GetFahrenheitFromCelsius(double degreesCelsius)
+    private static double GetFahrenheitFromCelsius(double degreesCelsius)
     {
         if (degreesCelsius - absoluteZeroCelsius < -epsilone)
         {
@@ -28,7 +51,7 @@ internal class TemperatureConversion
         return degreesCelsius * 1.8 + 32;
     }
 
-    public static double GetCelsiusFromKelvin(double degreesKelvin)
+    private static double GetCelsiusFromKelvin(double degreesKelvin)
     {
         if (degreesKelvin < -epsilone)
         {
@@ -38,7 +61,7 @@ internal class TemperatureConversion
         return degreesKelvin + absoluteZeroCelsius;
     }
 
-    public static double GetFahrenheitFromKelvin(double degreesKelvin)
+    private static double GetFahrenheitFromKelvin(double degreesKelvin)
     {
         if (degreesKelvin < -epsilone)
         {
@@ -48,9 +71,9 @@ internal class TemperatureConversion
         return GetFahrenheitFromCelsius(GetCelsiusFromKelvin(degreesKelvin));
     }
 
-    public static double GetCelsiusFromFahrenheit(double degreesFahrenheit)
+    private static double GetCelsiusFromFahrenheit(double degreesFahrenheit)
     {
-        if (degreesFahrenheit - absoluteZeroFahrenheit < - epsilone)
+        if (degreesFahrenheit - absoluteZeroFahrenheit < -epsilone)
         {
             throw new ArgumentException($"Fahrenheit degrees cannot be less than absolute zero. Specified {nameof(degreesFahrenheit)}: {degreesFahrenheit}", nameof(degreesFahrenheit));
         }
@@ -58,7 +81,7 @@ internal class TemperatureConversion
         return (degreesFahrenheit - 32) * 1.8;
     }
 
-    public static double GetKelvinFromFahrenheit(double degreesFahrenheit)
+    private static double GetKelvinFromFahrenheit(double degreesFahrenheit)
     {
         if (degreesFahrenheit - absoluteZeroFahrenheit < -epsilone)
         {
