@@ -6,6 +6,9 @@ internal class HashTableMain
     {
         HashTable<string> hashTable = new HashTable<string>();
 
+
+        Console.WriteLine(hashTable.ToString());
+
         hashTable.Add("Q");
         hashTable.Add("W");
         hashTable.Add("E");
@@ -14,11 +17,16 @@ internal class HashTableMain
         hashTable.Add("Q");
         hashTable.Add("Y");
         hashTable.Add("W");
+        hashTable.Add(null);
+
+        Console.WriteLine(hashTable.ToString());
 
         Console.WriteLine(hashTable.Contains("Q"));
         Console.WriteLine(hashTable.Count);
 
         Console.WriteLine(hashTable.Remove("Q"));
         Console.WriteLine(hashTable.Contains("Q"));
+
+        hashTable.Clear();
     }
 }

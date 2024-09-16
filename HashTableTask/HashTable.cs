@@ -25,9 +25,9 @@ public class HashTable<T> : ICollection<T>
 
     public HashTable() : this(10) { }
 
-    private int GetItemIndex(T item)
+    private int GetListIndex(T item)
     {
-        if (Equals(item, null))
+        if (item is null)
         {
             return 0;
         }
@@ -37,9 +37,9 @@ public class HashTable<T> : ICollection<T>
 
     public void Add(T item)
     {
-        int index = GetItemIndex(item);
+        int index = GetListIndex(item);
 
-        if (Equals(_lists[index], null))
+        if (_lists[index] is null)
         {
             _lists[index] = new List<T>();
         }
@@ -52,9 +52,14 @@ public class HashTable<T> : ICollection<T>
 
     public void Clear()
     {
-        for (int i = 0; i < _lists.Length; i++)
+        if (Count == 0)
         {
-            _lists[i].Clear();
+            return;
+        }
+
+        foreach (List<T> list in _lists)
+        {
+            list?.Clear();
         }
 
         Count = 0;
@@ -63,14 +68,19 @@ public class HashTable<T> : ICollection<T>
 
     public bool Contains(T item)
     {
-        int index = GetItemIndex(item);
+        int index = GetListIndex(item);
+
+        if (_lists[index] is null)
+        {
+            return false;
+        }
 
         return _lists[index].Contains(item);
     }
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (Equals(array, null))
+        if (array is null)
         {
             throw new ArgumentNullException(nameof(array));
         }
@@ -80,44 +90,51 @@ public class HashTable<T> : ICollection<T>
             throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index is out of range [0, {array.Length - 1}]. Specified {nameof(arrayIndex)}: {arrayIndex}");
         }
 
-        if (array.Rank != 1)
-        {
-            throw new ArgumentException("The array is not one-dimensional", nameof(array));
-        }
-
         if (Count > array.Length - arrayIndex)
         {
             throw new ArgumentException("There is not enough space in the array to copy", nameof(array));
         }
 
-        int index = arrayIndex;
+        int i = arrayIndex;
 
         foreach (List<T> list in _lists)
         {
-            list.CopyTo(array, index);
-            index += list.Count;
+            if (list is not null)
+            {
+                list.CopyTo(array, i);
+                i += list.Count;
+            }
         }
     }
 
     public bool Remove(T item)
     {
-        int index = GetItemIndex(item);
+        int index = GetListIndex(item);
 
-        Count--;
-        modCount++;
+        if (_lists[index] is not null && _lists[index].Remove(item))
+        {
+            Count--;
+            modCount--;
+            return true;
+        }
 
-        return _lists[index].Remove(item);
+        return false;
     }
 
     public IEnumerator<T> GetEnumerator()
     {
-        int fixedModCount = modCount;
+        int initialModCount = modCount;
 
         foreach (List<T> list in _lists)
         {
+            if (list is null)
+            {
+                continue;
+            }
+
             foreach (T item in list)
             {
-                if (fixedModCount != modCount)
+                if (initialModCount != modCount)
                 {
                     throw new InvalidOperationException("The HashTable has been changed");
                 }
@@ -134,13 +151,23 @@ public class HashTable<T> : ICollection<T>
 
     public override string ToString()
     {
+        if (Count == 0)
+        {
+            return "{Хэш таблица пуста}";
+        }
+
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        for (int i = 0; i < _lists.Length; i++)
+        foreach (List<T> list in _lists)
         {
-            if (!Equals(_lists[i], null))
+            if (list is null)
             {
-                _lists[i].ForEach(item => stringBuilder.Append(Equals(item, null) ? "null" : item).Append(", "));
+                continue;
+            }
+
+            foreach (T item in list)
+            {
+                stringBuilder.Append(item is null ? "null" : item).Append(", ");
             }
         }
 
