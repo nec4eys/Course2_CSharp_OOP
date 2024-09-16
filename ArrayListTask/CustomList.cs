@@ -29,12 +29,10 @@ public class CustomList<T> : IList<T>
         {
             if (value < Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), $"The new capacity should not be less than the count of items. Specified capacity: {value}, Current capacity: {_items.Length}");
+                throw new ArgumentOutOfRangeException(nameof(value), $"The new capacity should not be less than the count of items in list. Specified capacity: {value}, Current capacity: {_items.Length}");
             }
 
             Array.Resize(ref _items, value);
-
-            modCount++;
         }
     }
 
@@ -81,6 +79,7 @@ public class CustomList<T> : IList<T>
 
         Array.Clear(_items, 0, Count);
         Count = 0;
+        modCount++;
     }
 
     public bool Contains(T item)
@@ -90,7 +89,7 @@ public class CustomList<T> : IList<T>
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (Equals(array, null))
+        if (array is null)
         {
             throw new ArgumentNullException(nameof(array));
         }
@@ -98,11 +97,6 @@ public class CustomList<T> : IList<T>
         if (arrayIndex < 0 || arrayIndex >= array.Length)
         {
             throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index is out of range [0, {array.Length - 1}]. Specified {nameof(arrayIndex)}: {arrayIndex}");
-        }
-
-        if (array.Rank != 1)
-        {
-            throw new ArgumentException("The array is not one-dimensional", nameof(array));
         }
 
         if (Count > array.Length - arrayIndex)
@@ -130,16 +124,16 @@ public class CustomList<T> : IList<T>
     {
         if (index < 0 || index > Count)
         {
-            throw new IndexOutOfRangeException($"Index is out of range [0, {Count}]. Specified {nameof(index)}: {index}");
-        }
-
-        if (_items.Length == 0)
-        {
-            _items = new T[1];
+            throw new ArgumentOutOfRangeException(nameof(index), $"Index is out of range [0, {Count}]. Specified {nameof(index)}: {index}");
         }
 
         if (Count == _items.Length)
         {
+            if (_items.Length == 0)
+            {
+                _items = new T[1];
+            }
+
             Array.Resize(ref _items, _items.Length * 2);
         }
 
@@ -171,12 +165,12 @@ public class CustomList<T> : IList<T>
     {
         CheckIndex(index);
 
-        if (index < Count)
+        if (index < Count - 1)
         {
             Array.Copy(_items, index + 1, _items, index, Count - index);
         }
 
-        _items[Count] = default!;
+        _items[Count - 1] = default!;
 
         Count--;
         modCount++;
@@ -192,11 +186,11 @@ public class CustomList<T> : IList<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        int fixedModCount = modCount;
+        int initialModCount = modCount;
 
         for (int i = 0; i < Count; i++)
         {
-            if (fixedModCount != modCount)
+            if (initialModCount != modCount)
             {
                 throw new InvalidOperationException("The List has been changed");
             }
@@ -212,11 +206,16 @@ public class CustomList<T> : IList<T>
 
     public override string ToString()
     {
+        if (Count == 0)
+        {
+            return "{Лист пуст}";
+        }
+
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        foreach (T item in _items)
+        for (int i = 0; i < _items.Length; i++)
         {
-            stringBuilder.Append(item).Append(", ");
+            stringBuilder.Append(_items[i]).Append(", ");
         }
 
         return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
@@ -241,20 +240,18 @@ public class CustomList<T> : IList<T>
             return false;
         }
 
-        // Стоит ли делать так же проверку вместимостей?
-
         for (int i = 0; i < Count; i++)
         {
-            if (Equals(_items[i], null))
+            if (_items[i] is null)
             {
-                if (!Equals(list._items[i], null))
+                if (list._items[i] is not null)
                 {
                     return false;
                 }
             }
             else
             {
-                if (Equals(list._items[i], null) || !_items[i]!.Equals(list._items[i]))
+                if (list._items[i] is null || !_items[i]!.Equals(list._items[i]))
                 {
                     return false;
                 }
@@ -269,9 +266,9 @@ public class CustomList<T> : IList<T>
         const int prime = 17;
         int hash = 1;
 
-        foreach (T item in _items)
+        for (int i = 0; i < Count; i++)
         {
-            hash = prime * hash + (Equals(item, null) ? 0 : item.GetHashCode());
+            hash = prime * hash + (_items[i] is null ? 0 : _items[i]!.GetHashCode());
         }
 
         return hash;
