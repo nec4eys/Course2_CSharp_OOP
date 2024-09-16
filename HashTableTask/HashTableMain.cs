@@ -17,7 +17,6 @@ internal class HashTableMain
         hashTable.Add("Q");
         hashTable.Add("Y");
         hashTable.Add("W");
-        hashTable.Add(null);
 
         Console.WriteLine(hashTable.ToString());
 
