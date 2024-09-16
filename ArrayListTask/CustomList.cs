@@ -213,7 +213,7 @@ public class CustomList<T> : IList<T>
 
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        for (int i = 0; i < _items.Length; i++)
+        for (int i = 0; i < Count; i++)
         {
             stringBuilder.Append(_items[i]).Append(", ");
         }

@@ -21,13 +21,13 @@ internal class ArrayListMain
         Console.WriteLine(list);
 
         Console.WriteLine(list.Count);
-        //Console.WriteLine(list[1]);
+        Console.WriteLine(list[1]);
 
-        //list.TrimExcess();
+        list.TrimExcess();
         list.RemoveAt(8);
 
         Console.WriteLine(list);
 
-        
+
     }
 }
