@@ -6,7 +6,7 @@ public class Graph
 
     public Graph(int[,] matrix)
     {
-        if (matrix == null)
+        if (matrix is null)
         {
             throw new ArgumentNullException(nameof(matrix));
         }

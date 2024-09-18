@@ -7,7 +7,7 @@ public class BinarySearchTree<T>
 {
     private TreeNode<T>? _root;
 
-    private Comparer<T> _comparer;
+    private readonly Comparer<T> _comparer;
 
     public BinarySearchTree()
     {
@@ -16,6 +16,11 @@ public class BinarySearchTree<T>
 
     public BinarySearchTree(Comparer<T> comparer)
     {
+        if (comparer is null)
+        {
+            throw new ArgumentNullException(nameof(comparer));
+        }
+
         _comparer = comparer;
     }
 
@@ -23,17 +28,23 @@ public class BinarySearchTree<T>
 
     public void Insert(T data)
     {
+        if (_root is null)
+        {
+            _root = new TreeNode<T>(data);
+            return;
+        }
+
         TreeNode<T>? node = _root;
 
         Count++;
 
-        while (!Equals(node, null))
+        while (node is not null)
         {
-            int comparison = _comparer.Compare(data, node.Data);
+            int comparisonResult = _comparer.Compare(data, node.Data);
 
-            if (comparison <= 0)
+            if (comparisonResult < 0)
             {
-                if (Equals(node.LeftChild, null))
+                if (node.LeftChild is null)
                 {
                     node.LeftChild = new TreeNode<T>(data);
                     return;
@@ -43,7 +54,7 @@ public class BinarySearchTree<T>
             }
             else
             {
-                if (Equals(node.RightChild, null))
+                if (node.RightChild is null)
                 {
                     node.RightChild = new TreeNode<T>(data);
                     return;
@@ -52,24 +63,22 @@ public class BinarySearchTree<T>
                 node = node.RightChild;
             }
         }
-
-        _root = new TreeNode<T>(data);
     }
 
     public bool Contains(T data)
     {
         TreeNode<T>? node = _root;
 
-        while (!Equals(node, null))
+        while (node is not null)
         {
-            int comparison = _comparer.Compare(data, node.Data);
+            int comparisonResult = _comparer.Compare(data, node.Data);
 
-            if (comparison == 0)
+            if (comparisonResult == 0)
             {
                 return true;
             }
 
-            if (comparison < 0)
+            if (comparisonResult < 0)
             {
                 node = node.LeftChild;
             }
@@ -85,52 +94,44 @@ public class BinarySearchTree<T>
     public bool Remove(T data)
     {
         TreeNode<T>? node = _root;
-        TreeNode<T>? parentNode = _root;
+        TreeNode<T>? parentNode = null;
         bool isLeftChild = true;
 
-        while (!Equals(node, null))
+        while (node is not null)
         {
-            int comparison = _comparer.Compare(data, node.Data);
+            int comparisonResult = _comparer.Compare(data, node.Data);
 
-            if (comparison == 0)
+            if (comparisonResult == 0)
             {
-                bool isRootRemove = _comparer.Compare(node.Data, _root!.Data) == 0;
+                bool isRootRemove = parentNode is null;
 
-                bool haveLeftChild = !Equals(node.LeftChild, null);
-                bool haveRightChild = !Equals(node.RightChild, null);
+                bool hasLeftChild = node.LeftChild is not null;
+                bool hasRightChild = node.RightChild is not null;
 
-                if (haveLeftChild && haveRightChild) // Удаление узла с двумя детьми
+                if (hasLeftChild && hasRightChild) // Удаление узла с двумя детьми
                 {
                     TreeNode<T> leftmostNode = node.RightChild!;
-                    TreeNode<T> parentLeftmostNode = node;
+                    TreeNode<T> leftmostNodeParent = node;
 
-                    while (!Equals(leftmostNode.LeftChild, null))
+                    while (leftmostNode.LeftChild is not null)
                     {
-                        parentLeftmostNode = leftmostNode;
+                        leftmostNodeParent = leftmostNode;
                         leftmostNode = leftmostNode.LeftChild;
                     }
 
-                    if (_comparer.Compare(parentLeftmostNode.Data, node.Data) == 0)
+                    if (!ReferenceEquals(leftmostNodeParent, node))
                     {
-                        parentLeftmostNode.RightChild = leftmostNode.RightChild;
-                    }
-                    else
-                    {
-                        parentLeftmostNode.LeftChild = leftmostNode.RightChild;
+                        leftmostNodeParent.LeftChild = leftmostNode.RightChild;
+                        leftmostNode.RightChild = node.RightChild;
                     }
 
                     leftmostNode.LeftChild = node.LeftChild;
-                    leftmostNode.RightChild = node.RightChild;
 
                     SetNewNode(leftmostNode, parentNode!, isLeftChild, isRootRemove);
                 }
-                else if (haveLeftChild && !haveRightChild) // Удаление узла с одним ребенком слева
+                else if (hasLeftChild || hasRightChild) // Удаление узла с одним ребенком
                 {
-                    SetNewNode(node.LeftChild, parentNode!, isLeftChild, isRootRemove);
-                }
-                else if (!haveLeftChild && haveRightChild) // Удаление узла с одним ребенком справа
-                {
-                    SetNewNode(node.RightChild, parentNode!, isLeftChild, isRootRemove);
+                    SetNewNode(hasLeftChild ? node.LeftChild : node.RightChild, parentNode!, isLeftChild, isRootRemove);
                 }
                 else // Удаление листа
                 {
@@ -144,7 +145,7 @@ public class BinarySearchTree<T>
 
             parentNode = node;
 
-            if (comparison < 0)
+            if (comparisonResult < 0)
             {
                 isLeftChild = true;
                 node = node.LeftChild;
@@ -159,33 +160,32 @@ public class BinarySearchTree<T>
         return false;
     }
 
-    private void SetNewNode(TreeNode<T>? newNode, TreeNode<T> parentNode, bool isLeftChild, bool isRootRemove) // rename
+    private void SetNewNode(TreeNode<T>? newNode, TreeNode<T> parentNode, bool isLeftChild, bool isRootRemove)
     {
         if (isRootRemove)
         {
             _root = newNode;
+            return;
+        }
+
+        if (isLeftChild)
+        {
+            parentNode.LeftChild = newNode;
         }
         else
         {
-            if (isLeftChild)
-            {
-                parentNode.LeftChild = newNode;
-            }
-            else
-            {
-                parentNode.RightChild = newNode;
-            }
+            parentNode.RightChild = newNode;
         }
     }
 
-    public void DepthFirstSearch(Action<T> action)
+    public void DepthFirstSearchRecursive(Action<T> action)
     {
         DepthFirstSearchRecursive(_root, action);
     }
 
     private static void DepthFirstSearchRecursive(TreeNode<T>? node, Action<T> action)
     {
-        if (node != null)
+        if (node is not null)
         {
             action(node.Data);
 
@@ -194,9 +194,9 @@ public class BinarySearchTree<T>
         }
     }
 
-    public void DepthFirstSearchNonRecursive(Action<T> action)
+    public void DepthFirstSearch(Action<T> action)
     {
-        if (_root == null)
+        if (_root is null)
         {
             return;
         }
@@ -210,12 +210,12 @@ public class BinarySearchTree<T>
 
             action(node.Data);
 
-            if (node.RightChild != null)
+            if (node.RightChild is not null)
             {
                 stack.Push(node.RightChild);
             }
 
-            if (node.LeftChild != null)
+            if (node.LeftChild is not null)
             {
                 stack.Push(node.LeftChild);
             }
@@ -224,7 +224,7 @@ public class BinarySearchTree<T>
 
     public void BreadthFirstSearch(Action<T> action)
     {
-        if (_root == null)
+        if (_root is null)
         {
             return;
         }
@@ -238,12 +238,12 @@ public class BinarySearchTree<T>
 
             action(node.Data);
 
-            if (node.LeftChild != null)
+            if (node.LeftChild is not null)
             {
                 queue.Enqueue(node.LeftChild);
             }
 
-            if (node.RightChild != null)
+            if (node.RightChild is not null)
             {
                 queue.Enqueue(node.RightChild);
             }
@@ -252,30 +252,14 @@ public class BinarySearchTree<T>
 
     public override string ToString()
     {
+        if (_root is null)
+        {
+            return "{Дерево пустое}";
+        }
+
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        if (!Equals(_root, null))
-        {
-            Queue<TreeNode<T>> queue = new Queue<TreeNode<T>>();
-            queue.Enqueue(_root);
-
-            while (queue.Count > 0)
-            {
-                TreeNode<T> node = queue.Dequeue();
-
-                stringBuilder.Append(node.Data).Append(", ");
-
-                if (node.LeftChild != null)
-                {
-                    queue.Enqueue(node.LeftChild);
-                }
-
-                if (node.RightChild != null)
-                {
-                    queue.Enqueue(node.RightChild);
-                }
-            }
-        }
+        BreadthFirstSearch(data => { stringBuilder.Append(data).Append(", "); });
 
         return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
     }

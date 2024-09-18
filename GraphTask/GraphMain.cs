@@ -2,7 +2,7 @@
 
 internal class GraphMain
 {
-    public static void ActionWithNode(int node)
+    public static void WriteNodeInConsole(int node)
     {
         Console.WriteLine(node + " ");
     }
@@ -21,12 +21,12 @@ internal class GraphMain
         Graph graph = new Graph(graphMatrix);
 
         Console.WriteLine("Обход в ширину:");
-        graph.BreadthFirstSearch(ActionWithNode);
+        graph.BreadthFirstSearch(WriteNodeInConsole);
 
         Console.WriteLine("Обход в глубину (не рекурсивный):");
-        graph.DepthFirstSearch(ActionWithNode);
+        graph.DepthFirstSearch(WriteNodeInConsole);
 
         Console.WriteLine("Обход в глубину (рекурсивный):");
-        graph.DepthFirstSearchRecursive(ActionWithNode);
+        graph.DepthFirstSearchRecursive(WriteNodeInConsole);
     }
 }

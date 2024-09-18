@@ -2,7 +2,7 @@
 {
     internal class TreeMain
     {
-        public static void ActionWithNode<T>(T node)
+        public static void WriteNodeInConsole<T>(T node)
         {
             Console.WriteLine(node + " ");
         }
@@ -22,22 +22,22 @@
             Console.WriteLine(tree);
 
             Console.WriteLine("Обход в глубину (рекурсивный):");
-            tree.DepthFirstSearch(ActionWithNode);
+            tree.DepthFirstSearchRecursive(WriteNodeInConsole);
             Console.WriteLine();
 
             Console.WriteLine("Обход в глубину (не рекурсивный):");
-            tree.DepthFirstSearchNonRecursive(ActionWithNode);
+            tree.DepthFirstSearch(WriteNodeInConsole);
             Console.WriteLine();
 
             Console.WriteLine("Обход в ширину:");
-            tree.BreadthFirstSearch(ActionWithNode);
+            tree.BreadthFirstSearch(WriteNodeInConsole);
             Console.WriteLine();
 
             Console.WriteLine("Число элементов: " + tree.Count);
 
             Console.WriteLine(tree.Remove(50));
             Console.WriteLine("После удаления:");
-            tree.BreadthFirstSearch(ActionWithNode);
+            tree.BreadthFirstSearch(WriteNodeInConsole);
         }
     }
 }
