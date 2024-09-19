@@ -6,11 +6,11 @@ internal interface IView
 
     void DisplayErrorForm(string message);
 
-    double InputDegrees { get; }
+    double Degrees { get; }
 
-    string InputFromScale { get; }
+    string FromScale { get; }
 
-    string InputToScale { get; }
+    string ToScale { get; }
 
     event EventHandler<EventArgs> StartConversion;
 }

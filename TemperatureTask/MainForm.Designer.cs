@@ -44,7 +44,7 @@
             // okButton
             // 
             okButton.Anchor = AnchorStyles.None;
-            okButton.Location = new Point(79, 137);
+            okButton.Location = new Point(86, 129);
             okButton.Name = "okButton";
             okButton.Size = new Size(120, 30);
             okButton.TabIndex = 0;
@@ -56,9 +56,9 @@
             // 
             temperatureOutputText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             temperatureOutputText.Font = new Font("Segoe UI", 11F);
-            temperatureOutputText.Location = new Point(3, 71);
+            temperatureOutputText.Location = new Point(3, 64);
             temperatureOutputText.Name = "temperatureOutputText";
-            temperatureOutputText.Size = new Size(273, 53);
+            temperatureOutputText.Size = new Size(286, 52);
             temperatureOutputText.TabIndex = 1;
             temperatureOutputText.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -66,7 +66,7 @@
             // 
             temperatureTypeInput.FormattingEnabled = true;
             temperatureTypeInput.Items.AddRange(new object[] { "C", "K", "F" });
-            temperatureTypeInput.Location = new Point(147, 3);
+            temperatureTypeInput.Location = new Point(162, 3);
             temperatureTypeInput.Name = "temperatureTypeInput";
             temperatureTypeInput.Size = new Size(121, 23);
             temperatureTypeInput.TabIndex = 4;
@@ -75,8 +75,10 @@
             // 
             temperatureInput.Location = new Point(3, 3);
             temperatureInput.Name = "temperatureInput";
-            temperatureInput.Size = new Size(111, 23);
+            temperatureInput.Size = new Size(126, 23);
             temperatureInput.TabIndex = 5;
+            temperatureInput.Enter += temperatureInput_Enter;
+            temperatureInput.Leave += temperatureInput_Leave;
             // 
             // mainPanel
             // 
@@ -90,9 +92,9 @@
             mainPanel.Name = "mainPanel";
             mainPanel.RowCount = 3;
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
+            mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 52F));
             mainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
-            mainPanel.Size = new Size(279, 180);
+            mainPanel.Size = new Size(292, 172);
             mainPanel.TabIndex = 4;
             // 
             // inputPanel
@@ -105,23 +107,21 @@
             inputPanel.Dock = DockStyle.Fill;
             inputPanel.Location = new Point(3, 3);
             inputPanel.Name = "inputPanel";
-            inputPanel.Size = new Size(273, 65);
+            inputPanel.Size = new Size(286, 58);
             inputPanel.TabIndex = 2;
             // 
             // temperatureTypeOutput
             // 
             temperatureTypeOutput.FormattingEnabled = true;
             temperatureTypeOutput.Items.AddRange(new object[] { "C", "K", "F" });
-            temperatureTypeOutput.Location = new Point(147, 31);
+            temperatureTypeOutput.Location = new Point(162, 32);
             temperatureTypeOutput.Name = "temperatureTypeOutput";
             temperatureTypeOutput.Size = new Size(121, 23);
             temperatureTypeOutput.TabIndex = 7;
             // 
             // toText
             // 
-            toText.Anchor = AnchorStyles.None;
-            toText.AutoSize = true;
-            toText.Location = new Point(120, 34);
+            toText.Location = new Point(135, 35);
             toText.Name = "toText";
             toText.Size = new Size(14, 15);
             toText.TabIndex = 6;
@@ -130,9 +130,7 @@
             // 
             // fromText
             // 
-            fromText.Anchor = AnchorStyles.None;
-            fromText.AutoSize = true;
-            fromText.Location = new Point(120, 6);
+            fromText.Location = new Point(135, 6);
             fromText.Name = "fromText";
             fromText.Size = new Size(21, 15);
             fromText.TabIndex = 5;
@@ -144,7 +142,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(304, 461);
+            ClientSize = new Size(317, 196);
             Controls.Add(mainPanel);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;

@@ -2,22 +2,20 @@
 
 internal class TemperatureConversion
 {
-    const double absoluteZeroCelsius = -273.15;
+    private const double AbsoluteZeroCelsius = -273.15;
 
-    const double absoluteZeroFahrenheit = -459.67;
+    private const double AbsoluteZeroFahrenheit = -459.67;
 
-    const double epsilone = 1.0e-10;
+    private const double Epsilon = 1.0e-10;
 
     public static double ConvertTemperatureFromOneScaleToAnother(double degrees, string fromScale, string toScale)
     {
-        degrees = Math.Round(degrees, 3);
-
-        if (fromScale == "" || toScale == "" || fromScale == toScale)
+        if (fromScale == toScale)
         {
-            throw new ArgumentException("Two different scales should be specified", nameof(fromScale) + " " + nameof(toScale));
+            return Math.Round(degrees, 3, MidpointRounding.AwayFromZero);
         }
 
-        double resultDegrees = (toScale + fromScale) switch
+        var resultDegrees = (toScale + fromScale) switch
         {
             "KC" => GetKelvinFromCelsius(degrees),
             "KF" => GetKelvinFromFahrenheit(degrees),
@@ -28,22 +26,22 @@ internal class TemperatureConversion
             _ => throw new ArgumentException("Incorrect temperature scales", nameof(fromScale) + " " + nameof(toScale)),
         };
 
-        return Math.Round(resultDegrees, 3);
+        return Math.Round(resultDegrees, 3, MidpointRounding.AwayFromZero);
     }
 
     private static double GetKelvinFromCelsius(double degreesCelsius)
     {
-        if (degreesCelsius - absoluteZeroCelsius < -epsilone)
+        if (degreesCelsius - AbsoluteZeroCelsius < -Epsilon)
         {
             throw new ArgumentException($"Celsius degrees cannot be less than absolute zero. Specified {nameof(degreesCelsius)}: {degreesCelsius}", nameof(degreesCelsius));
         }
 
-        return degreesCelsius - absoluteZeroCelsius;
+        return degreesCelsius - AbsoluteZeroCelsius;
     }
 
     private static double GetFahrenheitFromCelsius(double degreesCelsius)
     {
-        if (degreesCelsius - absoluteZeroCelsius < -epsilone)
+        if (degreesCelsius - AbsoluteZeroCelsius < -Epsilon)
         {
             throw new ArgumentException($"Celsius degrees cannot be less than absolute zero. Specified {nameof(degreesCelsius)}: {degreesCelsius}", nameof(degreesCelsius));
         }
@@ -53,17 +51,17 @@ internal class TemperatureConversion
 
     private static double GetCelsiusFromKelvin(double degreesKelvin)
     {
-        if (degreesKelvin < -epsilone)
+        if (degreesKelvin < -Epsilon)
         {
             throw new ArgumentException($"Kelvin degrees cannot be less than absolute zero. Specified {nameof(degreesKelvin)}: {degreesKelvin}", nameof(degreesKelvin));
         }
 
-        return degreesKelvin + absoluteZeroCelsius;
+        return degreesKelvin + AbsoluteZeroCelsius;
     }
 
     private static double GetFahrenheitFromKelvin(double degreesKelvin)
     {
-        if (degreesKelvin < -epsilone)
+        if (degreesKelvin < -Epsilon)
         {
             throw new ArgumentException($"Kelvin degrees cannot be less than absolute zero. Specified {nameof(degreesKelvin)}: {degreesKelvin}", nameof(degreesKelvin));
         }
@@ -73,7 +71,7 @@ internal class TemperatureConversion
 
     private static double GetCelsiusFromFahrenheit(double degreesFahrenheit)
     {
-        if (degreesFahrenheit - absoluteZeroFahrenheit < -epsilone)
+        if (degreesFahrenheit - AbsoluteZeroFahrenheit < -Epsilon)
         {
             throw new ArgumentException($"Fahrenheit degrees cannot be less than absolute zero. Specified {nameof(degreesFahrenheit)}: {degreesFahrenheit}", nameof(degreesFahrenheit));
         }
@@ -83,7 +81,7 @@ internal class TemperatureConversion
 
     private static double GetKelvinFromFahrenheit(double degreesFahrenheit)
     {
-        if (degreesFahrenheit - absoluteZeroFahrenheit < -epsilone)
+        if (degreesFahrenheit - AbsoluteZeroFahrenheit < -Epsilon)
         {
             throw new ArgumentException($"Fahrenheit degrees cannot be less than absolute zero. Specified {nameof(degreesFahrenheit)}: {degreesFahrenheit}", nameof(degreesFahrenheit));
         }

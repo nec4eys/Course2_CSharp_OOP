@@ -14,7 +14,8 @@ internal class Controller
     {
         try
         {
-            _view.SetResultTemperature(_view.InputDegrees, TemperatureConversion.ConvertTemperatureFromOneScaleToAnother(_view.InputDegrees, _view.InputFromScale, _view.InputToScale));
+            _view.SetResultTemperature(Math.Round(_view.Degrees, 3, MidpointRounding.AwayFromZero), 
+                TemperatureConversion.ConvertTemperatureFromOneScaleToAnother(_view.Degrees, _view.FromScale, _view.ToScale));
         }
         catch (Exception ex)
         {

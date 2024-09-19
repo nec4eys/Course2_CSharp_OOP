@@ -6,37 +6,54 @@ namespace TemperatureTask
         public MainForm()
         {
             InitializeComponent();
+
+            temperatureInput.Text = "Введите температуру";
+            temperatureInput.ForeColor = Color.Gray;
+
+            temperatureTypeInput.DropDownStyle = ComboBoxStyle.DropDownList;
+            temperatureTypeInput.SelectedIndex = 0;
+
+            temperatureTypeOutput.DropDownStyle = ComboBoxStyle.DropDownList;
+            temperatureTypeOutput.SelectedIndex = 1;
         }
 
-        public double InputDegrees => Convert.ToDouble(temperatureInput.Text);
+        public double Degrees => Convert.ToDouble(temperatureInput.Text);
 
-        public string InputFromScale => temperatureTypeInput.Text;
+        public string FromScale => temperatureTypeInput.Text;
 
-        public string InputToScale => temperatureTypeOutput.Text;
+        public string ToScale => temperatureTypeOutput.Text;
 
         public event EventHandler<EventArgs>? StartConversion;
 
         public void SetResultTemperature(double degreesFrom, double degreesTo)
         {
-            temperatureOutputText.Text = degreesFrom.ToString() + " " + temperatureTypeInput.Text + " = " + degreesTo.ToString() + " " + temperatureTypeOutput.Text;
+            temperatureOutputText.Text = degreesFrom + " " + temperatureTypeInput.Text + " = " + degreesTo + " " + temperatureTypeOutput.Text;
         }
 
         public void DisplayErrorForm(string message)
         {
-            DialogResult result = MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            if (result == DialogResult.OK)
-            {
-                return;
-            }
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            if (StartConversion != null)
+            StartConversion?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void temperatureInput_Enter(object sender, EventArgs e)
+        {
+            temperatureInput.Text = null;
+            temperatureInput.ForeColor = Color.Black;
+        }
+
+        private void temperatureInput_Leave(object sender, EventArgs e)
+        {
+            if (temperatureInput.Text == "")
             {
-                StartConversion(this, EventArgs.Empty);
+                temperatureInput.Text = "Введите температуру";
+                temperatureInput.ForeColor = Color.Gray;
             }
+
         }
     }
 }
