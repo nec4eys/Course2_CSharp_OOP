@@ -120,7 +120,7 @@ public class SinglyLinkedList<T>
     {
         for (ListItem<T>? currentItem = _head, previousItem = null; currentItem != null; previousItem = currentItem, currentItem = currentItem.Next)
         {
-            if ((!Equals(data) && !Equals(currentItem.Data)) || (Equals(data) && data.Equals(currentItem.Data)))
+            if (Equals(data, currentItem.Data))
             {
                 if (previousItem == null)
                 {
@@ -176,16 +176,17 @@ public class SinglyLinkedList<T>
         }
 
         SinglyLinkedList<T> newSinglyLinkedList = new SinglyLinkedList<T>();
+        newSinglyLinkedList.Count = Count;
 
-        ListItem<T> currentItemInNewList = new ListItem<T>(_head.Data);
+        ListItem<T> newListCurrentItem = new ListItem<T>(_head.Data);
 
-        newSinglyLinkedList._head = currentItemInNewList;
+        newSinglyLinkedList._head = newListCurrentItem;
 
-        for (ListItem<T>? itemFromOriginalList = _head.Next, nextItemInNewList; itemFromOriginalList != null; itemFromOriginalList = itemFromOriginalList.Next)
+        for (ListItem<T>? originalListItem = _head.Next; originalListItem != null; originalListItem = originalListItem.Next)
         {
-            nextItemInNewList = new ListItem<T>(itemFromOriginalList.Data);
-            currentItemInNewList.Next = nextItemInNewList;
-            currentItemInNewList = nextItemInNewList;
+            ListItem<T> newListNextItem = new ListItem<T>(originalListItem.Data);
+            newListCurrentItem.Next = newListNextItem;
+            newListCurrentItem = newListNextItem;
         }
 
         return newSinglyLinkedList;
@@ -195,7 +196,7 @@ public class SinglyLinkedList<T>
     {
         if (_head == null)
         {
-            return "[Список пуст]";
+            return "[]";
         }
 
         StringBuilder stringBuilder = new StringBuilder("[");
