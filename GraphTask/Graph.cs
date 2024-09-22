@@ -22,19 +22,19 @@ public class Graph
 
     public void DepthFirstSearch(Action<int> action)
     {
-        bool[] visitedDepthFirstSearch = new bool[_matrix.GetLength(0)];
+        bool[] visited = new bool[_matrix.GetLength(0)];
 
         Stack<int> stack = new Stack<int>();
 
         for (int i = 0; i < _matrix.GetLength(0); i++)
         {
-            if (visitedDepthFirstSearch[i])
+            if (visited[i])
             {
                 continue;
             }
 
             stack.Push(i);
-            visitedDepthFirstSearch[i] = true;
+            visited[i] = true;
 
             while (stack.Count > 0)
             {
@@ -44,10 +44,10 @@ public class Graph
 
                 for (int j = _matrix.GetLength(0) - 1; j >= 0; j--)
                 {
-                    if (_matrix[vertex, j] != 0 && !visitedDepthFirstSearch[j])
+                    if (_matrix[vertex, j] != 0 && !visited[j])
                     {
                         stack.Push(j);
-                        visitedDepthFirstSearch[j] = true;
+                        visited[j] = true;
                     }
                 }
             }
@@ -62,12 +62,12 @@ public class Graph
         {
             if (!visited[i])
             {
-                DepthFirstSearch(i, visited, action);
+                DepthFirstSearchRecursive(i, visited, action);
             }
         }
     }
 
-    private void DepthFirstSearch(int vertex, bool[] visited, Action<int> action)
+    private void DepthFirstSearchRecursive(int vertex, bool[] visited, Action<int> action)
     {
         visited[vertex] = true;
 
@@ -77,7 +77,7 @@ public class Graph
         {
             if (_matrix[vertex, i] != 0 && !visited[i])
             {
-                DepthFirstSearch(i, visited, action);
+                DepthFirstSearchRecursive(i, visited, action);
             }
         }
     }
