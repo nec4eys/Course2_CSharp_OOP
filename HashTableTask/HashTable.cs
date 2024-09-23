@@ -7,7 +7,7 @@ public class HashTable<T> : ICollection<T>
 {
     private readonly List<T>[] _lists;
 
-    private int modCount;
+    private int _modCount;
 
     public bool IsReadOnly => false;
 
@@ -47,7 +47,7 @@ public class HashTable<T> : ICollection<T>
         _lists[index].Add(item);
 
         Count++;
-        modCount++;
+        _modCount++;
     }
 
     public void Clear()
@@ -63,19 +63,14 @@ public class HashTable<T> : ICollection<T>
         }
 
         Count = 0;
-        modCount++;
+        _modCount++;
     }
 
     public bool Contains(T item)
     {
         int index = GetListIndex(item);
 
-        if (_lists[index] is null)
-        {
-            return false;
-        }
-
-        return _lists[index].Contains(item);
+        return _lists[index] is null ? false : _lists[index].Contains(item);
     }
 
     public void CopyTo(T[] array, int arrayIndex)
@@ -85,9 +80,9 @@ public class HashTable<T> : ICollection<T>
             throw new ArgumentNullException(nameof(array));
         }
 
-        if (arrayIndex < 0 || arrayIndex >= array.Length)
+        if (arrayIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index is out of range [0, {array.Length - 1}]. Specified {nameof(arrayIndex)}: {arrayIndex}");
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index must be greater than zero. Specified {nameof(arrayIndex)}: {arrayIndex}");
         }
 
         if (Count > array.Length - arrayIndex)
@@ -114,7 +109,7 @@ public class HashTable<T> : ICollection<T>
         if (_lists[index] is not null && _lists[index].Remove(item))
         {
             Count--;
-            modCount--;
+            _modCount++;
             return true;
         }
 
@@ -123,7 +118,7 @@ public class HashTable<T> : ICollection<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        int initialModCount = modCount;
+        int initialModCount = _modCount;
 
         foreach (List<T> list in _lists)
         {
@@ -134,7 +129,7 @@ public class HashTable<T> : ICollection<T>
 
             foreach (T item in list)
             {
-                if (initialModCount != modCount)
+                if (initialModCount != _modCount)
                 {
                     throw new InvalidOperationException("The HashTable has been changed");
                 }
@@ -153,22 +148,14 @@ public class HashTable<T> : ICollection<T>
     {
         if (Count == 0)
         {
-            return "{Хэш таблица пуста}";
+            return "{}";
         }
 
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        foreach (List<T> list in _lists)
+        foreach (T item in this)
         {
-            if (list is null)
-            {
-                continue;
-            }
-
-            foreach (T item in list)
-            {
-                stringBuilder.Append(item is null ? "null" : item).Append(", ");
-            }
+            stringBuilder.Append(item is null ? "null" : item).Append(", ");
         }
 
         return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
