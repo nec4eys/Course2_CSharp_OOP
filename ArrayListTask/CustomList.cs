@@ -7,7 +7,7 @@ public class CustomList<T> : IList<T>
 {
     private T[] _items;
 
-    private int modCount;
+    private int _modCount;
 
     public CustomList(int capacity)
     {
@@ -25,11 +25,11 @@ public class CustomList<T> : IList<T>
     {
         get => _items.Length;
 
-        private set
+        set
         {
             if (value < Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), $"The new capacity should not be less than the count of items in list. Specified capacity: {value}, Current capacity: {_items.Length}");
+                throw new ArgumentOutOfRangeException(nameof(value), $"The new capacity should not be less than the count of items in list. Specified capacity: {value}, Current items count: {Count}");
             }
 
             Array.Resize(ref _items, value);
@@ -79,7 +79,7 @@ public class CustomList<T> : IList<T>
 
         Array.Clear(_items, 0, Count);
         Count = 0;
-        modCount++;
+        _modCount++;
     }
 
     public bool Contains(T item)
@@ -94,9 +94,9 @@ public class CustomList<T> : IList<T>
             throw new ArgumentNullException(nameof(array));
         }
 
-        if (arrayIndex < 0 || arrayIndex >= array.Length)
+        if (arrayIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index is out of range [0, {array.Length - 1}]. Specified {nameof(arrayIndex)}: {arrayIndex}");
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index must be greater than zero. Specified {nameof(arrayIndex)}: {arrayIndex}");
         }
 
         if (Count > array.Length - arrayIndex)
@@ -109,15 +109,7 @@ public class CustomList<T> : IList<T>
 
     public int IndexOf(T item)
     {
-        for (int i = 0; i < Count; i++)
-        {
-            if (Equals(_items[i], item))
-            {
-                return i;
-            }
-        }
-
-        return -1;
+        return Array.IndexOf(_items, item);
     }
 
     public void Insert(int index, T item)
@@ -133,8 +125,10 @@ public class CustomList<T> : IList<T>
             {
                 _items = new T[1];
             }
-
-            Array.Resize(ref _items, _items.Length * 2);
+            else
+            {
+                Array.Resize(ref _items, _items.Length * 2);
+            }
         }
 
         if (index != Count)
@@ -144,7 +138,7 @@ public class CustomList<T> : IList<T>
 
         _items[index] = item;
         Count++;
-        modCount++;
+        _modCount++;
     }
 
     public bool Remove(T item)
@@ -167,13 +161,13 @@ public class CustomList<T> : IList<T>
 
         if (index < Count - 1)
         {
-            Array.Copy(_items, index + 1, _items, index, Count - index);
+            Array.Copy(_items, index + 1, _items, index, Count - index - 1);
         }
 
         _items[Count - 1] = default!;
 
         Count--;
-        modCount++;
+        _modCount++;
     }
 
     public void TrimExcess()
@@ -186,11 +180,11 @@ public class CustomList<T> : IList<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        int initialModCount = modCount;
+        int initialModCount = _modCount;
 
         for (int i = 0; i < Count; i++)
         {
-            if (initialModCount != modCount)
+            if (initialModCount != _modCount)
             {
                 throw new InvalidOperationException("The List has been changed");
             }
@@ -208,7 +202,7 @@ public class CustomList<T> : IList<T>
     {
         if (Count == 0)
         {
-            return "{Лист пуст}";
+            return "{}";
         }
 
         StringBuilder stringBuilder = new StringBuilder("{");
@@ -228,7 +222,7 @@ public class CustomList<T> : IList<T>
             return true;
         }
 
-        if (ReferenceEquals(obj, null) || obj.GetType() != GetType())
+        if (obj is null || obj.GetType() != GetType())
         {
             return false;
         }
@@ -242,19 +236,9 @@ public class CustomList<T> : IList<T>
 
         for (int i = 0; i < Count; i++)
         {
-            if (_items[i] is null)
+            if (!Equals(_items[i], list._items[i]))
             {
-                if (list._items[i] is not null)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (list._items[i] is null || !_items[i]!.Equals(list._items[i]))
-                {
-                    return false;
-                }
+                return false;
             }
         }
 

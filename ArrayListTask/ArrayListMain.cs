@@ -4,7 +4,7 @@ internal class ArrayListMain
 {
     static void Main(string[] args)
     {
-        CustomList<int> list = new CustomList<int>(10);
+        CustomList<int> list = new CustomList<int>(8);
 
         Console.WriteLine(list);
 
@@ -24,10 +24,8 @@ internal class ArrayListMain
         Console.WriteLine(list[1]);
 
         list.TrimExcess();
-        list.RemoveAt(8);
+        list.RemoveAt(3);
 
         Console.WriteLine(list);
-
-
     }
 }
