@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Xml.Linq;
 
 namespace TreeTask;
 
@@ -18,7 +17,8 @@ public class BinarySearchTree<T>
     {
         if (comparer is null)
         {
-            throw new ArgumentNullException(nameof(comparer));
+            _comparer = Comparer<T>.Default;
+            return;
         }
 
         _comparer = comparer;
@@ -129,13 +129,9 @@ public class BinarySearchTree<T>
 
                     SetNewNode(leftmostNode, parentNode!, isLeftChild, isRootRemove);
                 }
-                else if (hasLeftChild || hasRightChild) // Удаление узла с одним ребенком
+                else
                 {
                     SetNewNode(hasLeftChild ? node.LeftChild : node.RightChild, parentNode!, isLeftChild, isRootRemove);
-                }
-                else // Удаление листа
-                {
-                    SetNewNode(null, parentNode!, isLeftChild, isRootRemove);
                 }
 
                 Count--;
@@ -254,12 +250,12 @@ public class BinarySearchTree<T>
     {
         if (_root is null)
         {
-            return "{Дерево пустое}";
+            return "{}";
         }
 
         StringBuilder stringBuilder = new StringBuilder("{");
 
-        BreadthFirstSearch(data => { stringBuilder.Append(data).Append(", "); });
+        BreadthFirstSearch(data => stringBuilder.Append(data).Append(", "));
 
         return stringBuilder.Remove(stringBuilder.Length - 2, 2).Append('}').ToString();
     }
