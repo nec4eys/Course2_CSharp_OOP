@@ -96,7 +96,7 @@ public class CustomList<T> : IList<T>
 
         if (arrayIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index must be greater than zero. Specified {nameof(arrayIndex)}: {arrayIndex}");
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex), $"Index must be greater than or equal to zero. Specified {nameof(arrayIndex)}: {arrayIndex}");
         }
 
         if (Count > array.Length - arrayIndex)
