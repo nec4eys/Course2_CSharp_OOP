@@ -109,7 +109,7 @@ public class CustomList<T> : IList<T>
 
     public int IndexOf(T item)
     {
-        return Array.IndexOf(_items, item);
+        return Array.IndexOf(_items, item, 0, Count);
     }
 
     public void Insert(int index, T item)
