@@ -15,13 +15,7 @@ public class BinarySearchTree<T>
 
     public BinarySearchTree(Comparer<T> comparer)
     {
-        if (comparer is null)
-        {
-            _comparer = Comparer<T>.Default;
-            return;
-        }
-
-        _comparer = comparer;
+        _comparer = comparer ?? Comparer<T>.Default;
     }
 
     public int Count { get; private set; }
@@ -31,6 +25,7 @@ public class BinarySearchTree<T>
         if (_root is null)
         {
             _root = new TreeNode<T>(data);
+            Count++;
             return;
         }
 
